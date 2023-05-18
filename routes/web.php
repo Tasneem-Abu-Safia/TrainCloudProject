@@ -17,7 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'postLogin'])->name('adminLoginPost');
+Route::get('/', [AuthController::class, 'getLogin'])->name('login');
+Route::post('/postLogin', [AuthController::class, 'postLogin'])->name('LoginPost');
+
+Route::get('/register', [AuthController::class, 'getSignup'])->name('register');
+Route::post('/register/trainee', [AuthController::class, 'postTrainee'])->name('postTrainee');
+Route::post('/register/advisor', [AuthController::class, 'postAdvisor'])->name('postAdvisor');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', function () {

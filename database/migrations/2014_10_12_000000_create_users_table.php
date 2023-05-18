@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('password')->nullable();
             $table->string('unique_id')->nullable()->unique();
             $table->enum('guard', ['manager', 'trainee', 'advisor']);
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

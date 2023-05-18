@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,6 +16,7 @@ return new class extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->string('phone');
             $table->string('address');
+            $table->string('degree');
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->text('files')->nullable();
             $table->timestamps();

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdvisorRegistrationRequest;
+use App\Http\Requests\TraineeRegistrationRequest;
+use App\Models\Field;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,17 +21,24 @@ class AuthController extends Controller
 
     public function postLogin(Request $request)
     {
-        $this->validate($request, [
-            'userName' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'userName' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        if (auth()->attempt(['email' => $request->input('userName'), 'password' => $request->input('password')])) {
+        $field = filter_var($credentials['userName'], FILTER_VALIDATE_EMAIL) ? 'email' : 'unique_id';
+
+        $loginData = [
+            $field => $credentials['userName'],
+            'password' => $credentials['password'],
+        ];
+
+        if (Auth::attempt($loginData)) {
+            $request->session()->regenerate();
 
             return redirect()->route('home');
-
         } else {
-            return back()->withErrors(['email' => 'Invalid credentials']);
+            return back()->with('error', 'These credentials do not match our records.');
         }
     }
 
@@ -41,5 +51,22 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')->with('success', 'Log Out Successfully');
+    }
+
+
+    public function getSignup()
+    {
+        $fields = Field::all();
+        return view('auth.register', compact('fields'));
+    }
+
+    public function postTrainee(TraineeRegistrationRequest $request)
+    {
+
+    }
+
+    public function postAdvisor(AdvisorRegistrationRequest $request)
+    {
+
     }
 }

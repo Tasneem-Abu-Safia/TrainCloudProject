@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('advisor_id')->constrained('advisors');
             $table->foreignId('field_id')->constrained('fields');
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->timestamps();
         });
     }

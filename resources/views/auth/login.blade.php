@@ -14,6 +14,11 @@
     <link href="{{asset('admin/assets/plugins/custom/prismjs/prismjs.bundle.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset('admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css"/>
     <link rel="shortcut icon" href="{{asset('admin/assets/media/logos/LOGO4.png')}}">
+    <script>
+        setTimeout(function () {
+            document.getElementById('msg').style.display = 'none';
+        }, 3000);
+    </script>
 </head>
 <body id="kt_body"
       class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
@@ -26,14 +31,19 @@
                 <div class="d-flex flex-column-fluid flex-column flex-center">
                     <!--begin::Signin-->
                     <div class="login-form login-signin py-11">
-                        <!--begin::Form-->
-                        <form method="POST" action="{{ route('login') }}" class="form">
+                        @if(session()->has('error'))
+                            <div class="alert alert-danger" id="msg">
+                                {{ session()->get('error') }}
+                            </div>
+                        @endif
+                        <form method="POST" action="{{ route('LoginPost') }}" class="form">
                         @csrf
                         <!--begin::Title-->
                             <div class="text-center pb-8">
                                 <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Sign In</h2>
                                 <span class="text-muted font-weight-bold font-size-h4">Or
-                                <a href="" class="text-primary font-weight-bolder" id="create-account-link">Create An Account</a></span>
+                                <a href="{{ route('register') }}" class="text-primary font-weight-bolder"
+                                   id="create-account-link">Create An Account</a></span>
                             </div>
                             <!--end::Title-->
                             <!--begin::Form group-->
