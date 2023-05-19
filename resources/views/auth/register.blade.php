@@ -61,7 +61,16 @@
         </li>
     </ul>
     <!-- Pills navs -->
-
+    @if(session()->has('error'))
+        <div class="alert alert-danger" id="msg">
+            {{ session()->get('error') }}
+        </div>
+    @endif
+    @if(session()->has('success'))
+        <div class="alert alert-success" id="msg">
+            {{ session()->get('success') }}
+        </div>
+@endif
     <!-- Pills content -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-trainee" role="tabpanel" aria-labelledby="tab-trainee">
@@ -70,40 +79,90 @@
             @csrf
             <!-- Name input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="traineeName" class="form-control" name="name" required>
+                    <input type="text" id="traineeName"
+                           class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                           value="{{ old('name', '') }}"
+                           name="name" required>
                     <label class="form-label" for="traineeName">Name</label>
+                    @if($errors->has('name'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('name') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Email input -->
                 <div class="form-outline mb-4">
-                    <input type="email" id="traineeEmail" class="form-control" name="email" required>
+                    <input type="email" id="traineeEmail"
+                           class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                           value="{{ old('email', '') }}"
+                           name="email" required>
                     <label class="form-label" for="traineeEmail">Email</label>
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Password input -->
                 <div class="form-outline mb-4">
-                    <input type="password" id="traineePassword" class="form-control" name="password" required>
+                    <input type="password" id="traineePassword"
+                           class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                           value="{{ old('password', '') }}" name="password" required>
                     <label class="form-label" for="traineePassword">Password</label>
+                    @if($errors->has('password'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('password') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Phone input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="traineePhone" class="form-control" name="phone" required>
+                    <input type="text" id="traineePhone"
+                           class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}"
+                           value="{{ old('phone', '') }}" name="phone" required>
                     <label class="form-label" for="traineePhone">Phone</label>
+                    @if($errors->has('phone'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('phone') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Address input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="traineeAddress" class="form-control" name="address" required>
+                    <input type="text" id="traineeAddress"
+                           class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}"
+                           value="{{ old('address', '') }}" name="address" required>
                     <label class="form-label" for="traineeAddress">Address</label>
+                    @if($errors->has('address'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('address') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Select Degree Education -->
                 <div class="form-outline mb-4">
-                    <select id="traineeDegree" class="form-select" name="degree" required>
+                    <select id="traineeDegree" class="form-select  {{ $errors->has('degree') ? 'is-invalid' : '' }}"
+                            value="{{ old('degree', '') }}"  name="degree" required>
                         <option value="" selected disabled>Select Degree Education</option>
                         <option value="bachelor">Bachelor's Degree</option>
                         <option value="master">Master's Degree</option>
                         <option value="phd">PhD</option>
                     </select>
+                    @if($errors->has('degree'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('degree') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="input-group mb-3">
-                    <input type="file" id="traineeFiles" class="form-control" name="files[]" multiple required>
+                    <input type="file" id="traineeFiles"
+                           class="form-control {{ $errors->has('files') ? 'is-invalid' : '' }}"
+                           name="files[]" multiple required>
+                    @if($errors->has('files'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('files') }}
+                        </div>
+                    @endif
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mb-3">Sign up</button>
             </form>
@@ -114,37 +173,78 @@
             @csrf
             <!-- Name input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="advisorName" class="form-control" name="name" required>
+                    <input type="text" id="advisorName"
+                           class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                           value="{{ old('name', '') }}" name="name" required>
                     <label class="form-label" for="advisorName">Name</label>
+                    @if($errors->has('name'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('name') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Email input -->
                 <div class="form-outline mb-4">
-                    <input type="email" id="advisorEmail" class="form-control" name="email" required>
+                    <input type="email" id="advisorEmail"
+                           class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                           value="{{ old('email', '') }}" name="email" required>
                     <label class="form-label" for="advisorEmail">Email</label>
+                    @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Password input -->
                 <div class="form-outline mb-4">
-                    <input type="password" id="advisorPassword" class="form-control" name="password" required>
+                    <input type="password" id="advisorPassword"
+                           class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                           value="{{ old('password', '') }}" name="password" required>
                     <label class="form-label" for="advisorPassword">Password</label>
+                    @if($errors->has('password'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('password') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Phone input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="advisorPhone" class="form-control" name="phone" required>
+                    <input type="text" id="advisorPhone"
+                           class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}"
+                           value="{{ old('phone', '') }}" name="phone" required>
                     <label class="form-label" for="advisorPhone">Phone</label>
+                    @if($errors->has('phone'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('phone') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Address input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="advisorAddress" class="form-control" name="address" required>
+                    <input type="text" id="advisorAddress"
+                           class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}"
+                           value="{{ old('address', '') }}" name="address" required>
                     <label class="form-label" for="advisorAddress">Address</label>
+                    @if($errors->has('address'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('address') }}
+                        </div>
+                    @endif
                 </div>
                 <!-- Select Degree Education -->
                 <div class="form-outline mb-4">
-                    <select id="advisorDegree" class="form-select" name="degree" required>
+                    <select id="advisorDegree" class="form-select  {{ $errors->has('degree') ? 'is-invalid' : '' }}"
+                            name="degree" required>
                         <option value="" selected disabled>Select Degree Education</option>
                         <option value="bachelor">Bachelor's Degree</option>
                         <option value="master">Master's Degree</option>
                         <option value="phd">PhD</option>
                     </select>
+                    @if($errors->has('degree'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('degree') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="form-outline mb-4">
                     <select id="advisorFields" class="form-select" name="fields[]" multiple required>
@@ -153,9 +253,21 @@
                             <option value="{{ $field->id }}">{{ $field->name }}</option>
                         @endforeach
                     </select>
+                    @if($errors->has('fields'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('fields') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="input-group mb-3">
-                    <input type="file" id="advisorFiles" class="form-control" name="files[]" multiple required>
+                    <input type="file" id="advisorFiles"
+                           class="form-control {{ $errors->has('files') ? 'is-invalid' : '' }}"
+                           value="{{ old('files', '') }}" name="files[]" multiple required>
+                    @if($errors->has('files'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('files') }}
+                        </div>
+                    @endif
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mb-3">Sign up</button>
             </form>

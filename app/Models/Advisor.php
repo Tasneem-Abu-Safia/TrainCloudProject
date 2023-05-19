@@ -10,7 +10,7 @@ class Advisor extends Model
 {
     use HasFactory ,SoftDeletes;
 
-
+    protected $fillable = ['user_id', 'phone', 'address', 'degree', 'status', 'files', 'degree'];
 
     public function fields()
     {

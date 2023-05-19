@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users');
             $table->string('phone');
             $table->string('address');
+            $table->string('degree');
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->text('files')->nullable();
             $table->timestamps();

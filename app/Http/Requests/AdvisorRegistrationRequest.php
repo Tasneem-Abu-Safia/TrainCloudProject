@@ -17,7 +17,7 @@ class AdvisorRegistrationRequest extends FormRequest
             'name' => 'required|string|max:25',
             'email' => 'required|email|unique:users|max:255',
             'password' => 'required|string|min:8',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|regex:/^\+?[0-9]{1,3}[-. ]?\(?[0-9]{1,}\)?[-. ]?[0-9]{1,}[-. ]?[0-9]{1,}$/',
             'address' => 'required|string|max:255',
             'degree' => 'required|in:bachelor,master,phd',
             'files' => 'required|array',
