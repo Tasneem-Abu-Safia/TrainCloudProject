@@ -65,6 +65,36 @@
 @include('Dashboard.js')
 @yield('js')
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Delete</h5>
+                <button type="button" style="border: none" id="cancelModal">
+                    <i aria-hidden="true" class="fa fa-times"></i>
+                </button>
+            </div>
+            <form method="post" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <h5 class="text-center">Are you Sure ?</h5>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            id="cancelModal">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-light-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

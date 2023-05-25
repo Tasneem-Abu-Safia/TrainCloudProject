@@ -14,11 +14,8 @@
     <link href="{{asset('admin/assets/plugins/custom/prismjs/prismjs.bundle.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset('admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css"/>
     <link rel="shortcut icon" href="{{asset('admin/assets/media/logos/LOGO4.png')}}">
-    <script>
-        setTimeout(function () {
-            document.getElementById('msg').style.display = 'none';
-        }, 3000);
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body id="kt_body"
       class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
@@ -34,6 +31,11 @@
                         @if(session()->has('error'))
                             <div class="alert alert-danger" id="msg">
                                 {{ session()->get('error') }}
+                            </div>
+                        @endif
+                        @if(session()->has('success'))
+                            <div class="alert alert-success" id="msg">
+                                {{ session()->get('success') }}
                             </div>
                         @endif
                         <form method="POST" action="{{ route('LoginPost') }}" class="form">
@@ -67,6 +69,9 @@
                             <div class="form-group">
                                 <div class="d-flex justify-content-between mt-n5">
                                     <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
+                                    <a href="javascript:;" id="forgotPassword"
+                                       class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot
+                                        Password ?</a>
                                 </div>
                                 <input
                                     class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }} form-control-solid h-auto py-7 px-6 rounded-lg"
@@ -89,101 +94,7 @@
 
 
                     </div>
-                    <!--end::Signin-->
-                    <!--begin::Signup-->
-                    <div class="login-form login-signup pt-11">
-                        <!--begin::Form-->
-                        <form class="form" novalidate="novalidate" id="kt_login_signup_form">
-                            <!--begin::Title-->
-                            <div class="text-center pb-8">
-                                <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Sign Up</h2>
-                                <p class="text-muted font-weight-bold font-size-h4">Enter your details to create your
-                                    account</p>
-                            </div>
-                            <!--end::Title-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-                                       type="text" placeholder="Fullname" name="fullname" autocomplete="off"/>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-                                       type="email" placeholder="Email" name="email" autocomplete="off"/>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-                                       type="password" placeholder="Password" name="password" autocomplete="off"/>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-                                       type="password" placeholder="Confirm password" name="cpassword"
-                                       autocomplete="off"/>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <label class="checkbox mb-0">
-                                    <input type="checkbox" name="agree"/>I Agree the
-                                    <a href="#">terms and conditions</a>.
-                                    <span></span></label>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
-                                <button type="button" id="kt_login_signup_submit"
-                                        class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">
-                                    Submit
-                                </button>
-                                <button type="button" id="back-to-login-link"
-                                        class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">
-                                    Cancel
-                                </button>
-                            </div>
-                            <!--end::Form group-->
-                        </form>
-                        <!--end::Form-->
-                    </div>
-                    <!--end::Signup-->
-                    <!--begin::Forgot-->
-                    <div class="login-form login-forgot pt-11">
-                        <!--begin::Form-->
-                        <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
-                            <!--begin::Title-->
-                            <div class="text-center pb-8">
-                                <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Forgotten Password
-                                    ?</h2>
-                                <p class="text-muted font-weight-bold font-size-h4">Enter your email to reset your
-                                    password</p>
-                            </div>
-                            <!--end::Title-->
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6"
-                                       type="email" placeholder="Email" name="email" autocomplete="off"/>
-                            </div>
-                            <!--end::Form group-->
-                            <!--begin::Form group-->
-                            <div class="form-group d-flex flex-wrap flex-center pb-lg-0 pb-3">
-                                <button type="button" id="kt_login_forgot_submit"
-                                        class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">
-                                    Submit
-                                </button>
-                                <button type="button" id="kt_login_forgot_cancel"
-                                        class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mx-4">
-                                    Cancel
-                                </button>
-                            </div>
-                            <!--end::Form group-->
-                        </form>
-                        <!--end::Form-->
-                    </div>
-                    <!--end::Forgot-->
+
                 </div>
             </div>
             <!--end: Aside Container-->
@@ -208,6 +119,60 @@
         <!--end::Login-->
     </div>
 </div>
+<div class="modal" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('forgotPassword') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Password Reset Email</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#msg").show().delay(3000).fadeOut();
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const forgotPasswordLink = document.getElementById("forgotPassword");
+        const forgotPasswordModal = document.getElementById("forgotPasswordModal");
+
+        forgotPasswordLink.addEventListener("click", function () {
+            if (typeof bootstrap !== "undefined") {
+                // Use Bootstrap's modal function if available
+                new bootstrap.Modal(forgotPasswordModal).show();
+            } else {
+                // Fallback to a simple show/hide mechanism
+                forgotPasswordModal.style.display = "block";
+            }
+        });
+
+        // Close the modal when the close button is clicked
+        const closeModalButton = forgotPasswordModal.querySelector(".close");
+        closeModalButton.addEventListener("click", function () {
+            if (typeof bootstrap !== "undefined") {
+                // Use Bootstrap's modal function if available
+                new bootstrap.Modal(forgotPasswordModal).hide();
+            } else {
+                // Fallback to a simple show/hide mechanism
+                forgotPasswordModal.style.display = "none";
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

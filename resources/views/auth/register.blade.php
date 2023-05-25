@@ -71,7 +71,7 @@
             {{ session()->get('success') }}
         </div>
 @endif
-    <!-- Pills content -->
+<!-- Pills content -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-trainee" role="tabpanel" aria-labelledby="tab-trainee">
             <form class="form" id="trainee-register-form" method="POST" action="{{ route('postTrainee') }}"
@@ -142,7 +142,7 @@
                 <!-- Select Degree Education -->
                 <div class="form-outline mb-4">
                     <select id="traineeDegree" class="form-select  {{ $errors->has('degree') ? 'is-invalid' : '' }}"
-                            value="{{ old('degree', '') }}"  name="degree" required>
+                            value="{{ old('degree', '') }}" name="degree" required>
                         <option value="" selected disabled>Select Degree Education</option>
                         <option value="bachelor">Bachelor's Degree</option>
                         <option value="master">Master's Degree</option>
@@ -155,14 +155,20 @@
                     @endif
                 </div>
                 <div class="input-group mb-3">
-                    <input type="file" id="traineeFiles"
-                           class="form-control {{ $errors->has('files') ? 'is-invalid' : '' }}"
-                           name="files[]" multiple required>
-                    @if($errors->has('files'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('files') }}
-                        </div>
-                    @endif
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload CV</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" id="traineeFiles" placeholder="CV"
+                               class="form-control {{ $errors->has('file') ? 'is-invalid' : '' }}"
+                               name="file" required
+                               aria-describedby="inputGroupFileAddon01">
+                        @if($errors->has('file'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('file') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mb-3">Sign up</button>
             </form>
@@ -260,14 +266,20 @@
                     @endif
                 </div>
                 <div class="input-group mb-3">
-                    <input type="file" id="advisorFiles"
-                           class="form-control {{ $errors->has('files') ? 'is-invalid' : '' }}"
-                           value="{{ old('files', '') }}" name="files[]" multiple required>
-                    @if($errors->has('files'))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('files') }}
-                        </div>
-                    @endif
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload CV</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" id="advisorFiles" placeholder="CV"
+                               class="form-control {{ $errors->has('file') ? 'is-invalid' : '' }}"
+                               name="file" required
+                               aria-describedby="inputGroupFileAddon01">
+                        @if($errors->has('file'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('file') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mb-3">Sign up</button>
             </form>

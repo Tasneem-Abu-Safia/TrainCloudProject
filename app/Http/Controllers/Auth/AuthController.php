@@ -5,15 +5,20 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdvisorRegistrationRequest;
 use App\Http\Requests\TraineeRegistrationRequest;
+use App\Http\Traits\FileUploadTrait;
+use App\Mail\ForgotPass;
+use App\Mail\MailNotify;
 use App\Models\Advisor;
 use App\Models\Field;
 use App\Models\Trainee;
 use App\Models\User;
-use App\Traits\FileUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -132,6 +137,51 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
 //            return back()->with('error', 'Failed to register advisor. Please try again.');
+        }
+    }
+
+    public function changePass(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->back()->with('msg', 'Password changed successfully.');
+    }
+
+
+    public function forgotPassword(Request $request)
+    {
+        $validatedData = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users',
+        ]);
+        if ($validatedData->fails()) {
+            return back()->with('error', 'You should Register.');
+        }
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->with('error', 'User not found.');
+        }
+
+        if ($user->status === 'inactive') {
+            return back()->with('error', 'Manager not activation you');
+        } else {
+            $password = Str::random(9); // Generate a random password
+            $user->password = Hash::make($password);
+            $data = [
+                'user' => $user->name,
+                'uniqueId' => $user->unique_id,
+                'password' => $password,
+            ];
+            // Send activation email to the user
+            Mail::to($user->email)->send(new ForgotPass($data));
+            return back()->with('success', 'Email send Successfully');
+
         }
     }
 }

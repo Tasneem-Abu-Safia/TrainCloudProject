@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\ManagerControllers\AdvisorController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ManagerControllers\CourseController;
+use App\Http\Controllers\ManagerControllers\FieldController;
+use App\Http\Controllers\ManagerControllers\TraineeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
 Route::get('/', [AuthController::class, 'getLogin'])->name('login');
 Route::post('/postLogin', [AuthController::class, 'postLogin'])->name('LoginPost');
+Route::post('/password/forgot', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
 
 Route::get('/register', [AuthController::class, 'getSignup'])->name('register');
 Route::post('/register/trainee', [AuthController::class, 'postTrainee'])->name('postTrainee');
@@ -28,7 +33,41 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', function () {
         return view('home');
     })->name('home');
-
+    Route::get('openChangePass', [AuthController::class, function () {
+        return view('auth.changePassword');
+    }])->name('getChangePassword');
+    Route::put('changePass', [AuthController::class, 'changePass'])->name('changePassword');
     Route::post('/logout', [AuthController::class, 'Logout'])->name('logout');
 
+    Route::middleware(['manager'])->group(function () {
+        // Trainee routes
+        Route::get('traineeRequests', [TraineeController::class, 'traineeRequests'])->name('traineeRequests');
+        Route::resource('trainees', TraineeController::class);
+        Route::get('trainee-active/{trainee_id}', [TraineeController::class, 'active'])->name('traineeActive');
+        Route::get('trainee-deActive/{trainee_id}', [TraineeController::class, 'deActive'])->name('traineeDeActive');
+
+        // Advisor routes
+        Route::get('advisorRequests', [AdvisorController::class, 'advisorRequests'])->name('advisorRequests');
+        Route::resource('advisors', AdvisorController::class);
+        Route::get('advisor-active/{advisor_id}', [AdvisorController::class, 'active'])->name('advisorActive');
+        Route::get('advisor-deActive/{advisor_id}', [AdvisorController::class, 'deActive'])->name('advisorDeActive');
+
+        // Field routes
+        Route::put('fields/{field}', [FieldController::class, 'update'])->name('fields.update');
+        Route::resource('fields', FieldController::class);
+        Route::get('/advisor-fields', [FieldController::class, 'getAdvisors'])->name('advisorFields');
+
+        //Course
+        Route::resource('courses', CourseController::class);
+
+
+    });
+
+
+    Route::middleware(['trainee'])->group(function () {
+    });
+
+
+    Route::middleware(['advisor'])->group(function () {
+    });
 });

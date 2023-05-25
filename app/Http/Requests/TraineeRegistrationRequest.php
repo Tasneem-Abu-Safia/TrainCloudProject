@@ -23,8 +23,7 @@ class TraineeRegistrationRequest extends FormRequest
             'phone' => 'required|regex:/^\+?[0-9]{1,3}[-. ]?\(?[0-9]{1,}\)?[-. ]?[0-9]{1,}[-. ]?[0-9]{1,}$/',
             'address' => 'required|string|max:255',
             'degree' => 'required|in:bachelor,master,phd',
-            'files' => 'required|array',
-            'files.*' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
         ];
     }
 }

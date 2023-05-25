@@ -10,6 +10,7 @@ class Field extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['name'];
 
     public function advisors()
     {

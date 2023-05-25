@@ -10,15 +10,25 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('advisor_field', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('course_num');
+            $table->text('desc');
             $table->foreignId('advisor_id')->constrained('advisors')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('field_id')->constrained('fields')
                 ->onDelete('cascade')->onUpdate('cascade');
-            
-            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->integer('duration');
+            $table->enum('duration_unit', ['days', 'weeks', 'months'])->default('weeks');
+            $table->string('location')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('fees')->nullable();
+            $table->integer('capacity')->nullable();
+            $table->integer('num_trainee')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +37,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('advisor_field');
+        Schema::dropIfExists('courses');
     }
 };
