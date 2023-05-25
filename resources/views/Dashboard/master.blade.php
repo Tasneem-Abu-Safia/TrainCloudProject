@@ -95,6 +95,34 @@
     </div>
 </div>
 
+<div class="modal fade" id="messagePusher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="message-modal-label"></h5>
+            </div>
+            <div class="modal-body">
+                <!-- Display the message here -->
+            </div>
+            <div class="modal-footer">
+                <form action="" method="post" id="messagePusherForm">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" href=""
+                            class="btn btn-secondary showOrder" id="showOrderPusher"
+                            data-dismiss="modal">Show
+                    </button>
+                    <a type="button" class="btn btn-secondary" id="closePusher">Close</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="notification-sound">
+    <source src="{{asset('sounds/not.mp3')}}" type="audio/mpeg">
+</audio>
 <!--end::Page Scripts-->
 </body>
 <!--end::Body-->

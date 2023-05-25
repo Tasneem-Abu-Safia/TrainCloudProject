@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ManagerControllers\CourseController;
 use App\Http\Controllers\ManagerControllers\FieldController;
 use App\Http\Controllers\ManagerControllers\TraineeController;
+use App\Http\Controllers\NotificationController;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -60,7 +62,13 @@ Route::group(['middleware' => 'auth'], function () {
         //Course
         Route::resource('courses', CourseController::class);
 
-
+        //Notification
+        Route::put('notificationsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::get('notificationsCount', function () {
+            return Notification::whereNull('read_at')->count();
+        })->name('notifications.count');
+        Route::resource('notifications', NotificationController::class);
+        Route::get('notificationsLatest', [NotificationController::class, 'getNotifications'])->name('getNotifications');
     });
 
 

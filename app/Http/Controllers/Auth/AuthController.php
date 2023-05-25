@@ -10,6 +10,7 @@ use App\Mail\ForgotPass;
 use App\Mail\MailNotify;
 use App\Models\Advisor;
 use App\Models\Field;
+use App\Models\Notification;
 use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Pusher\Pusher;
 
 class AuthController extends Controller
 {
@@ -73,20 +75,50 @@ class AuthController extends Controller
 
     public function postTrainee(TraineeRegistrationRequest $request)
     {
-        try {
-            DB::beginTransaction();
 
+        DB::beginTransaction();
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'guard' => 'trainee',
+            'status' => 'inactive',
+        ]);
+        // Upload files
+        $uploadedFiles = $this->uploadFiles($request, 'trainee_files');
+
+        $trainee = Trainee::create([
+            'user_id' => $user->id,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'degree' => $request->degree,
+            'status' => 'inactive',
+            'files' => $uploadedFiles,
+        ]);
+        DB::commit();
+        $this->pushNotification($trainee->id, 'Trainee');
+        // Redirect to a success page or perform any additional actions
+        return redirect()->route('login')->with('success', 'Trainee registered successfully. Please wait for approval.');
+
+    }
+
+    public function postAdvisor(AdvisorRegistrationRequest $request)
+    {
+
+        DB::transaction(function () use ($request) {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'guard' => 'trainee',
+                'guard' => 'advisor',
                 'status' => 'inactive',
             ]);
-            // Upload files
+
+            $fields = $request->input('fields');
             $uploadedFiles = $this->uploadFiles($request, 'trainee_files');
 
-            $trainee = Trainee::create([
+            $advisor = Advisor::create([
                 'user_id' => $user->id,
                 'phone' => $request->phone,
                 'address' => $request->address,
@@ -94,53 +126,17 @@ class AuthController extends Controller
                 'status' => 'inactive',
                 'files' => $uploadedFiles,
             ]);
-            DB::commit();
 
-            // Redirect to a success page or perform any additional actions
-            return redirect()->route('login')->with('success', 'Trainee registered successfully. Please wait for approval.');
-        } catch (\Exception $e) {
-            DB::rollback();
+            $advisor->fields()->attach($fields);
+            $this->pushNotification($advisor->id, 'Advisor');
+        });
 
-            // Redirect back with an error message
-            return back()->with('error', 'Failed to register Trainee. Please try again.');
-        }
+        return redirect()->route('login')->with('success', 'Advisor registered successfully. Please wait for approval.');
     }
 
-    public function postAdvisor(AdvisorRegistrationRequest $request)
-    {
-        try {
-            DB::transaction(function () use ($request) {
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'guard' => 'advisor',
-                    'status' => 'inactive',
-                ]);
 
-                $fields = $request->input('fields');
-                $uploadedFiles = $this->uploadFiles($request, 'trainee_files');
-
-                $advisor = Advisor::create([
-                    'user_id' => $user->id,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'degree' => $request->degree,
-                    'status' => 'inactive',
-                    'files' => $uploadedFiles,
-                ]);
-
-                $advisor->fields()->attach($fields);
-            });
-
-            return redirect()->route('login')->with('success', 'Advisor registered successfully. Please wait for approval.');
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-//            return back()->with('error', 'Failed to register advisor. Please try again.');
-        }
-    }
-
-    public function changePass(Request $request)
+    public
+    function changePass(Request $request)
     {
         $user = Auth::user();
         $request->validate([
@@ -154,7 +150,8 @@ class AuthController extends Controller
     }
 
 
-    public function forgotPassword(Request $request)
+    public
+    function forgotPassword(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
             'email' => 'required|email|exists:users',
@@ -183,5 +180,30 @@ class AuthController extends Controller
             return back()->with('success', 'Email send Successfully');
 
         }
+    }
+
+    public
+    function pushNotification($register_id, $type)
+    {
+        $manager = User::where(['guard' => 'manager'])->first();
+        $notification = Notification::create([
+            'type' => 'register_' . $type,
+            'notifiable_type' => 'App\User',
+            'notifiable_id' => $manager->id,
+            'data' => json_encode([
+                'register_id' => $register_id,
+                'title' => 'New Message',
+                'body' => 'New ' . $type . ' Register #' . $register_id,
+            ]),
+        ]);
+
+        $pusher = new Pusher('1e58abe6fe45f3bd2e73', 'c4f5a1132840e7111aba', '1607529', [
+            'cluster' => 'ap3'
+        ]);
+        $pusher->trigger('newRegister', 'new-register', [
+            'title' => 'New Message',
+            'body' => 'New ' . $type . ' Register #' . $register_id,
+            'Notification_id' => $notification->id,
+        ]);
     }
 }

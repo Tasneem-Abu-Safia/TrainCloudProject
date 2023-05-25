@@ -9,15 +9,15 @@ trait FileUploadTrait
 {
     public function uploadFiles($request, $directory, $disk = 'public')
     {
-        $paths = [];
+        $pathLast = '';
 
         if ($request->hasFile('files')) {
             $filename = time() . $request->name . '.' . $request->file('file')->getClientOriginalExtension();
             $path = $request->file('files')->storeAs($directory, $filename, $disk);
-            $paths[] = Storage::disk($disk)->url($path);
+            $pathLast = Storage::disk($disk)->url($path);
 
         }
 
-        return json_encode($paths);
+        return $pathLast;
     }
 }

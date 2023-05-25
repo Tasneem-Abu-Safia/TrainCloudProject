@@ -1,7 +1,8 @@
 <!--end::Demo Panel-->
 <script>var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";</script>
 <!--begin::Global Config(global config for global JS scripts)-->
-<script>var KTAppSettings = {"breakpoints": {"sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1400},
+<script>var KTAppSettings = {
+        "breakpoints": {"sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1400},
         "colors": {
             "theme": {
                 "base": {
@@ -75,3 +76,42 @@
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        {{--if ({{auth()->user()->guard === 'manager'}}) {--}}
+
+            {{--}--}}
+            Pusher.logToConsole = true;
+        var pusher = new Pusher('1e58abe6fe45f3bd2e73', {
+            cluster: 'ap3',
+            forceTLS: true
+        });
+        var channel = pusher.subscribe('newRegister');
+        channel.bind('new-register', function (data) {
+            console.log(data)
+            $('#messagePusher .modal-body').html(data.body);
+            $('#messagePusher .modal-title').html(data.title);
+            $('#messagePusher').modal('show');
+            // var audio = document.getElementById('notification-sound');
+            // audio.play();
+            $('#messagePusher #messagePusherForm').attr('action', function () {
+                return 'notificationsRead/' + data.Notification_id;
+            });
+            setTimeout(function () {
+                $('#messagePusher').modal('hide');
+            }, 20000);
+
+        });
+
+        $('#messagePusher #closePusher').on('click', function (e) {
+            $('#messagePusher').modal('hide');
+        });
+    });
+
+
+</script>
