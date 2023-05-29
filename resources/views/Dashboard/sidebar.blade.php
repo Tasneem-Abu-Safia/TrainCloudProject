@@ -61,12 +61,23 @@
                         <span class="menu-text">Dashboard</span>
                     </a>
                 </li>
+                <li class="menu-section">
+                    <h4 class="menu-text">Notification</h4>
+                    <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                </li>
+                <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                    <a href="{{ route('notifications.index') }}" class="menu-link menu-toggle">
+                        <i class="menu-icon fas fa-bell"></i>
+                        <span class="menu-text">Notification</span>
+                        <span id="unreadCount" class="badge badge-primary">0</span>
+                    </a>
+                </li>
+
                 @if(Auth::user()->guard === 'manager')
                     <li class="menu-section">
                         <h4 class="menu-text">System Management</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                     </li>
-
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <i class="menu-icon fas fa-book"></i> <span class="menu-text">Requests</span>
@@ -205,6 +216,7 @@
                     <h4 class="menu-text">SETTINGS</h4>
                     <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                 </li>
+
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                     <a href="{{route('getChangePassword')}}" class="menu-link menu-toggle">
                         <i class="menu-icon

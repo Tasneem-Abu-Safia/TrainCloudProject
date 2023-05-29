@@ -14,4 +14,15 @@ class Notification extends Model
 
     protected $table = 'notifications';
 
+
+    public function scopeByLevel($query)
+    {
+        if (auth()->user()->guard == 'manager') {
+            return $query->where([
+                'type' => 'register_Advisor',
+            ])->orWhere([
+                'type' => 'register_Trainee',
+            ]);
+        }
+    }
 }

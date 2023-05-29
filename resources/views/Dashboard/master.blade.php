@@ -95,8 +95,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="messagePusher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="messagePusher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -109,10 +108,7 @@
                 <form action="" method="post" id="messagePusherForm">
                     @csrf
                     @method('PUT')
-                    <button type="submit" href=""
-                            class="btn btn-secondary showOrder" id="showOrderPusher"
-                            data-dismiss="modal">Show
-                    </button>
+                    <button type="submit" href="" class="btn btn-secondary" id="showRegisterPusher" data-dismiss="modal">Show</button>
                     <a type="button" class="btn btn-secondary" id="closePusher">Close</a>
                 </form>
             </div>

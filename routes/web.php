@@ -63,9 +63,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('courses', CourseController::class);
 
         //Notification
-        Route::put('notificationsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::put('notificationsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notificationsRead');
+        Route::put('notifications/markAllRead', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
         Route::get('notificationsCount', function () {
-            return Notification::whereNull('read_at')->count();
+            return Notification::ByLevel()->whereNull('read_at')->count();
         })->name('notifications.count');
         Route::resource('notifications', NotificationController::class);
         Route::get('notificationsLatest', [NotificationController::class, 'getNotifications'])->name('getNotifications');

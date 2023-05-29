@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ManagerControllers;
 
+use App\Http\Traits\FileUploadTrait;
 use App\Mail\MailNotify;
 use App\Models\Trainee;
 use Illuminate\Foundation\Auth\User;
@@ -14,9 +15,8 @@ use Yajra\DataTables\DataTables;
 
 class TraineeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use FileUploadTrait;
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -65,6 +65,7 @@ class TraineeController extends Controller
      */
     public function show(Trainee $trainee)
     {
+        $trainee->files = $this->getUploadedFireBase($trainee->files);
         return view('layouts.trainee.show', compact('trainee'));
     }
 

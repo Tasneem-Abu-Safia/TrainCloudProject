@@ -59,6 +59,7 @@ class AdvisorController extends Controller
 
     public function show(Advisor $advisor)
     {
+        $advisor->files = $this->getUploadedFireBase($advisor->files);
         return view('layouts.advisor.show', compact('advisor'));
     }
 

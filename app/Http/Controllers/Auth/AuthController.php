@@ -86,7 +86,7 @@ class AuthController extends Controller
             'status' => 'inactive',
         ]);
         // Upload files
-        $uploadedFiles = $this->uploadFiles($request, 'trainee_files');
+        $uploadedFiles = $this->uploadFilesFireBase($request);
 
         $trainee = Trainee::create([
             'user_id' => $user->id,
@@ -96,8 +96,8 @@ class AuthController extends Controller
             'status' => 'inactive',
             'files' => $uploadedFiles,
         ]);
-        DB::commit();
         $this->pushNotification($trainee->id, 'Trainee');
+        DB::commit();
         // Redirect to a success page or perform any additional actions
         return redirect()->route('login')->with('success', 'Trainee registered successfully. Please wait for approval.');
 
@@ -116,7 +116,7 @@ class AuthController extends Controller
             ]);
 
             $fields = $request->input('fields');
-            $uploadedFiles = $this->uploadFiles($request, 'trainee_files');
+            $uploadedFiles = $this->uploadFilesFireBase($request);
 
             $advisor = Advisor::create([
                 'user_id' => $user->id,
@@ -135,8 +135,7 @@ class AuthController extends Controller
     }
 
 
-    public
-    function changePass(Request $request)
+    public function changePass(Request $request)
     {
         $user = Auth::user();
         $request->validate([
@@ -150,8 +149,7 @@ class AuthController extends Controller
     }
 
 
-    public
-    function forgotPassword(Request $request)
+    public function forgotPassword(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
             'email' => 'required|email|exists:users',
@@ -182,8 +180,7 @@ class AuthController extends Controller
         }
     }
 
-    public
-    function pushNotification($register_id, $type)
+    public function pushNotification($register_id, $type)
     {
         $manager = User::where(['guard' => 'manager'])->first();
         $notification = Notification::create([

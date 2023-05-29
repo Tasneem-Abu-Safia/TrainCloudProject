@@ -120,9 +120,8 @@
 
                             <div class="form-group">
                                 <label for="files">Files:</label>
-                                @if ($advisor->files)
-                                    <a href="{{ asset($advisor->files) }}" class="btn btn-light-primary"
-                                       target="_blank">Open/Download</a>
+                                @if ($trainee->files)
+                                    <a href="{{ asset($trainee->files) }}" class="btn btn-light-primary" target="_blank">Open CV</a>
                                 @else
                                     <p>No files uploaded.</p>
                                 @endif

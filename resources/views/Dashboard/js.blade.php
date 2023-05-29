@@ -97,11 +97,20 @@
             $('#messagePusher .modal-body').html(data.body);
             $('#messagePusher .modal-title').html(data.title);
             $('#messagePusher').modal('show');
-            // var audio = document.getElementById('notification-sound');
-            // audio.play();
+            var audio = document.getElementById('notification-sound');
+            audio.play();
+
             $('#messagePusher #messagePusherForm').attr('action', function () {
-                return 'notificationsRead/' + data.Notification_id;
+                var actionUrl = '{{ route("notificationsRead", ":notificationId") }}';
+                actionUrl = actionUrl.replace(':notificationId', data.Notification_id);
+                return actionUrl;
             });
+
+            $('#showRegisterPusher').on('click', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+                $('#messagePusherForm').submit();
+            });
+
             setTimeout(function () {
                 $('#messagePusher').modal('hide');
             }, 20000);
@@ -113,5 +122,20 @@
         });
     });
 
+    $(document).ready(function () {
+        updateUnreadCount(); // Call the function on page load
+        function updateUnreadCount() {
+            $.ajax({
+                url: "{{ route('notifications.count') }}",
+                method: "GET",
+                success: function (data) {
+                    $('#unreadCount').text(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
 
 </script>
