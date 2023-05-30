@@ -79,6 +79,11 @@
                                 <input type="email" class="form-control" id="email" value="{{ $trainee->user->email }}"
                                        disabled>
                             </div>
+                            <div class="form-group">
+                                <label for="id">Unique Id:</label>
+                                <input type="text" class="form-control" id="id" value="{{ $trainee->user->unique_id ?? '' }}"
+                                       disabled>
+                            </div>
 
                             <div class="form-group">
                                 <label for="phone">Phone:</label>

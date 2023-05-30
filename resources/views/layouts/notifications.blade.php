@@ -49,6 +49,7 @@
             table.on('click', '.makeRead', function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
+                var user = $(this).data('user');
                 var URL = "{{ route('notificationsRead', 'x') }}";
                 var new_url = URL.replace('x', id);
                 $.ajax({
@@ -61,9 +62,11 @@
                     success: function () {
                         var notificationType = $(this).data('notification-type');
                         if (notificationType === "register_Advisor") {
-                            window.location.href = "{{ route('advisors.show', ':register_id') }}".replace(':register_id', id);
+                            window.location.href = "{{ route('advisors.show', ':register_id') }}".replace(':register_id', user);
                         } else if (notificationType === "register_Trainee") {
-                            window.location.href = "{{ route('trainees.show', ':register_id') }}".replace(':register_id', id);
+                            window.location.href = "{{ route('trainees.show', ':register_id') }}".replace(':register_id', user);
+                        } else if (notificationType === "assignCourse") {
+                            window.location.href = "{{ route('courses.show', ':course_id') }}".replace(':course_id', user);
                         } else {
                             table.DataTable().ajax.reload();
                         }

@@ -96,7 +96,7 @@
                     id="kt_quick_user_toggle">
                                 <span
                                     class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,
-                                    {{Auth::user()->name}}</span>
+                                    {{Auth::user()->name .' - '. Auth::user()->guard }}</span>
                     <span
                         class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3"></span>
                     <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">

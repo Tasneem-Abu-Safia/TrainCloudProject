@@ -26,4 +26,9 @@ class Advisor extends Model
     {
         return $this->belongsToMany(Course::class, 'course_advisor');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

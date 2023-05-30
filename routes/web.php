@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdvisorControllers\TaskController;
+use App\Http\Controllers\AdvisorControllers\TaskSubmissionController;
+use App\Http\Controllers\ManagerControllers\CourseTraineeController;
 use App\Http\Controllers\ManagerControllers\AdvisorController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ManagerControllers\CourseController;
@@ -7,7 +10,6 @@ use App\Http\Controllers\ManagerControllers\FieldController;
 use App\Http\Controllers\ManagerControllers\TraineeController;
 use App\Http\Controllers\NotificationController;
 use App\Models\Notification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +43,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('changePass', [AuthController::class, 'changePass'])->name('changePassword');
     Route::post('/logout', [AuthController::class, 'Logout'])->name('logout');
 
+    //Notification
+    Route::put('notificationsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notificationsRead');
+    Route::put('notifications/markAllRead', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::get('notificationsCount', function () {
+        return Notification::ByLevel()->whereNull('read_at')->count();
+    })->name('notifications.count');
+    Route::resource('notifications', NotificationController::class);
+    Route::get('notificationsLatest', [NotificationController::class, 'getNotifications'])->name('getNotifications');
+
+
+    //Course
+    Route::resource('courses', CourseController::class);
+    Route::resource('tasks', TaskController::class);
+    Route::get('/allTrainee/{courseId}', [CourseController::class, 'getAllTrainee'])->name('getAllTrainee');
+    Route::resource('taskSubmissions', TaskSubmissionController::class);
+    Route::get('/tasks/{task}/submissions', [TaskController::class, 'getTaskSubmissions'])->name('tasks.submissions');
+
     Route::middleware(['manager'])->group(function () {
         // Trainee routes
         Route::get('traineeRequests', [TraineeController::class, 'traineeRequests'])->name('traineeRequests');
@@ -59,17 +78,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('fields', FieldController::class);
         Route::get('/advisor-fields', [FieldController::class, 'getAdvisors'])->name('advisorFields');
 
-        //Course
-        Route::resource('courses', CourseController::class);
+        Route::get('/course-trainees', [CourseTraineeController::class, 'index'])->name('course-trainees');
+        Route::get('/course-trainees/requests', [CourseTraineeController::class, 'indexRequest'])->name('course-traineesRequests');
+        Route::get('/course-trainees/active/{courseId}/{traineeId}', [CourseTraineeController::class, 'active']);
+        Route::get('/course-trainees/inactive/{courseId}/{traineeId}', [CourseTraineeController::class, 'inactive']);
+        Route::delete('/course-trainees/destroy/{courseId}/{traineeId}', [CourseTraineeController::class, 'destroy']);
 
-        //Notification
-        Route::put('notificationsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notificationsRead');
-        Route::put('notifications/markAllRead', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
-        Route::get('notificationsCount', function () {
-            return Notification::ByLevel()->whereNull('read_at')->count();
-        })->name('notifications.count');
-        Route::resource('notifications', NotificationController::class);
-        Route::get('notificationsLatest', [NotificationController::class, 'getNotifications'])->name('getNotifications');
     });
 
 
@@ -78,5 +92,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::middleware(['advisor'])->group(function () {
+        Route::put('/submissions/{submission}/mark', [TaskSubmissionController::class, 'updateMark'])->name('submissions.update.mark');
     });
 });

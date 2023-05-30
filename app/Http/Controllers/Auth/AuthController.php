@@ -96,7 +96,7 @@ class AuthController extends Controller
             'status' => 'inactive',
             'files' => $uploadedFiles,
         ]);
-        $this->pushNotification($trainee->id, 'Trainee');
+        $this->pushNotificationManager($trainee->id, 'Trainee');
         DB::commit();
         // Redirect to a success page or perform any additional actions
         return redirect()->route('login')->with('success', 'Trainee registered successfully. Please wait for approval.');
@@ -128,7 +128,7 @@ class AuthController extends Controller
             ]);
 
             $advisor->fields()->attach($fields);
-            $this->pushNotification($advisor->id, 'Advisor');
+            $this->pushNotificationManager($advisor->id, 'Advisor');
         });
 
         return redirect()->route('login')->with('success', 'Advisor registered successfully. Please wait for approval.');
@@ -180,7 +180,7 @@ class AuthController extends Controller
         }
     }
 
-    public function pushNotification($register_id, $type)
+    public function pushNotificationManager($register_id, $type)
     {
         $manager = User::where(['guard' => 'manager'])->first();
         $notification = Notification::create([

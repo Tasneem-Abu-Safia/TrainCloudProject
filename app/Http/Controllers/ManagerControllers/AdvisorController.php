@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ManagerControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\FileUploadTrait;
 use App\Mail\MailNotify;
 use App\Models\Advisor;
 use App\Models\User;
@@ -14,6 +15,8 @@ use Yajra\DataTables\DataTables;
 
 class AdvisorController extends Controller
 {
+    use FileUploadTrait;
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

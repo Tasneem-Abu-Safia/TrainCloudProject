@@ -221,7 +221,7 @@
                         <div class="col-lg-6">
                             <label for="fees">Fees</label>
                             <input type="number" class="form-control {{ $errors->has('fees') ? 'is-invalid' : '' }}"
-                                   name="fees" id="fees" value="{{ old('fees') }}" placeholder="Enter Fees">
+                                   name="fees" id="fees" min="0" value="{{ old('fees') }}" placeholder="Enter Fees">
                             @if($errors->has('fees'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('fees') }}
@@ -231,7 +231,7 @@
                         <div class="col-lg-6">
                             <label for="capacity">Capacity</label>
                             <input type="number" class="form-control {{ $errors->has('capacity') ? 'is-invalid' : '' }}"
-                                   name="capacity" id="capacity" value="{{ old('capacity') }}"
+                                   name="capacity" id="capacity" min="0" value="{{ old('capacity') }}"
                                    placeholder="Enter Capacity">
                             @if($errors->has('capacity'))
                                 <div class="invalid-feedback">

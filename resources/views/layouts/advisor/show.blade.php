@@ -82,6 +82,12 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="id">Unique Id:</label>
+                                <input type="text" class="form-control" id="id" value="{{ $advisor->user->unique_id ?? '' }}"
+                                       disabled>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="phone">Phone:</label>
                                 <input type="text" class="form-control" id="phone" value="{{ $advisor->phone }}"
                                        disabled>
@@ -120,8 +126,8 @@
 
                             <div class="form-group">
                                 <label for="files">Files:</label>
-                                @if ($trainee->files)
-                                    <a href="{{ asset($trainee->files) }}" class="btn btn-light-primary" target="_blank">Open CV</a>
+                                @if ($advisor->files)
+                                    <a href="{{ asset($advisor->files) }}" class="btn btn-light-primary" target="_blank">Open CV</a>
                                 @else
                                     <p>No files uploaded.</p>
                                 @endif

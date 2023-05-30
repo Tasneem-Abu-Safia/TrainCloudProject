@@ -32,7 +32,17 @@
                                 <input type="text" class="form-control" id="location" value="{{ $course->location }}"
                                        disabled>
                             </div>
-
+                            <div class="form-group">
+                                <label for="field">Field:</label>
+                                <input type="text" class="form-control" id="field" value="{{ $course->field->name }}"
+                                       disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="advisor">Advisor:</label>
+                                <input type="text" class="form-control" id="advisor"
+                                       value="{{ $course->advisor->user->name }}"
+                                       disabled>
+                            </div>
                             <div class="form-group">
                                 <label for="course_num">Course Number:</label>
                                 <input type="text" class="form-control" id="course_num"
@@ -85,9 +95,11 @@
                             </div>
 
                             <div class="form-group">
-                                <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-primary">
-                                    Edit
-                                </a>
+                                @if(\Illuminate\Support\Facades\Auth::user()->guard == 'manager')
+                                    <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-primary">
+                                        Edit
+                                    </a>
+                                @endif
                                 <a href="{{ route('courses.index') }}" class="btn btn-secondary">
                                     Back
                                 </a>

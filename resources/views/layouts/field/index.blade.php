@@ -92,7 +92,7 @@
             });
 
             // Show the modal when the "Create Field" button is clicked
-            $('.btn-success').click(function () {
+            $('.addField').click(function () {
                 $('#addFieldModal').modal('show');
             });
         });
@@ -179,7 +179,7 @@
                         <div class="card-toolbar">
                             <div class="d-flex align-items-center position-relative my-1"
                                  data-kt-view-roles-table-toolbar="base">
-                                <button type="button" class="btn btn-sm btn-light-primary er fs-6 px-8 py-4"
+                                <button type="button" class="addField btn btn-sm btn-light-primary er fs-6 px-8 py-4"
                                         data-bs-toggle="modal"
                                         data-bs-target="#addFieldModal">
                                     Create New Field

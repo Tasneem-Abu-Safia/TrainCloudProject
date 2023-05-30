@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Notification extends Model
 {
@@ -22,6 +23,16 @@ class Notification extends Model
                 'type' => 'register_Advisor',
             ])->orWhere([
                 'type' => 'register_Trainee',
+            ]);
+        } else if (auth()->user()->guard == 'advisor') {
+            return $query->where([
+                'type' => 'assignCourse',
+                'notifiable_id' => Auth::user()->advisor->id,
+            ]);
+        } else if (auth()->user()->guard == 'trainee') {
+            return $query->where([
+                'type' => 'assignCourse',
+                'notifiable_id' => Auth::user()->trainee->id,
             ]);
         }
     }

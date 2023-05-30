@@ -20,9 +20,13 @@ class NotificationController extends Controller
                     $buttons = '<div class="btn-group" role="group">';
                     if (strcmp($notification->type, "register_Advisor") == 0) {
                         $buttons .= '<a data-notification-type="' . $notification->type . '"
-                        data-id="' . $notification->id . '"  class="makeRead btn btn-light-primary"><i class="fas fa-eye"></i> View</a>';
+                        data-id="' . $notification->id . '" data-user="' . json_decode($notification->data, true)['register_id'] . '" class="makeRead btn btn-light-primary"><i class="fas fa-eye"></i> View</a>';
                     } else if (strcmp($notification->type, "register_Trainee") == 0) {
-                        $buttons .= '<a  data-notification-type="' . $notification->type . '" data-id="' . $notification->id . '" class=" makeRead btn btn-light-primary"><i class="fas fa-eye"></i> View</a>';
+                        $buttons .= '<a  data-notification-type="' . $notification->type . '" data-id="' . $notification->id . '"
+                            data-user="' . json_decode($notification->data, true)['register_id'] . '" class=" makeRead btn btn-light-primary"><i class="fas fa-eye"></i> View</a>';
+                    } else if (strcmp($notification->type, "assignCourse") == 0) {
+                        $buttons .= '<a  data-notification-type="' . $notification->type . '" data-id="' . $notification->id . '"
+                            data-user="' . json_decode($notification->data, true)['course_id'] . '" class=" makeRead btn btn-light-primary"><i class="fas fa-eye"></i> View</a>';
                     }
                     $buttons .= '</div>';
                     return $buttons;
@@ -42,22 +46,26 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function markAsRead($id)
+    public function markAsRead(Request $request, $id)
     {
         $notification = Notification::findOrFail($id);
         $notification->read_at = Carbon::now();
         $notification->save();
-        if (strcmp($notification->type, "register_Advisor") == 0) {
-            return redirect()->route('advisors.show', json_decode($notification->data, true)['register_id']);
-        } else if (strcmp($notification->type, "register_Trainee") == 0) {
-            return redirect()->route('trainees.show', json_decode($notification->data, true)['register_id']);
+        if (!$request->ajax()) {
+            if (strcmp($notification->type, "register_Advisor") == 0) {
+                return redirect()->route('advisors.show', json_decode($notification->data, true)['register_id']);
+            } else if (strcmp($notification->type, "register_Trainee") == 0) {
+                return redirect()->route('trainees.show', json_decode($notification->data, true)['register_id']);
+            } else if (strcmp($notification->type, "assignCourse") == 0) {
+                return redirect()->route('courses.show', json_decode($notification->data, true)['course_id']);
+            }
         }
     }
 
     public function markAllRead()
     {
         $userId = Auth::id();
-        Notification::where('notifiable_id', $userId)
+        Notification::ByLevel()
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Course extends Model
 {
@@ -44,5 +45,21 @@ class Course extends Model
     public function advisors()
     {
         return $this->belongsToMany(Advisor::class, 'course_advisor');
+    }
+
+    public function scopeByLevel($query)
+    {
+        if (auth()->user()->guard == 'advisor') {
+            return $query->where([
+                'advisor_id' => Auth::user()->advisor->id,
+                'end_date' >= date('Y-m-d'),
+            ]);
+        }
+        return $query;
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

@@ -78,45 +78,75 @@
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 <script>
 
     $(document).ready(function () {
-        {{--if ({{auth()->user()->guard === 'manager'}}) {--}}
-
-            {{--}--}}
-            Pusher.logToConsole = true;
+        Pusher.logToConsole = true;
         var pusher = new Pusher('1e58abe6fe45f3bd2e73', {
             cluster: 'ap3',
             forceTLS: true
         });
-        var channel = pusher.subscribe('newRegister');
-        channel.bind('new-register', function (data) {
-            console.log(data)
-            $('#messagePusher .modal-body').html(data.body);
-            $('#messagePusher .modal-title').html(data.title);
-            $('#messagePusher').modal('show');
-            var audio = document.getElementById('notification-sound');
-            audio.play();
+        if ({{auth()->user()->guard === 'manager'}}) {
+            var channel1 = pusher.subscribe('newRegister');
+            channel1.bind('new-register', function (data) {
+                console.log(data)
+                $('#messagePusher .modal-body').html(data.body);
+                $('#messagePusher .modal-title').html(data.title);
+                $('#messagePusher').modal('show');
+                updateUnreadCount();
+                var audio = document.getElementById('notification-sound');
+                audio.play();
 
-            $('#messagePusher #messagePusherForm').attr('action', function () {
-                var actionUrl = '{{ route("notificationsRead", ":notificationId") }}';
-                actionUrl = actionUrl.replace(':notificationId', data.Notification_id);
-                return actionUrl;
+                $('#messagePusher #messagePusherForm').attr('action', function () {
+                    var actionUrl = '{{ route("notificationsRead", ":notificationId") }}';
+                    actionUrl = actionUrl.replace(':notificationId', data.Notification_id);
+                    return actionUrl;
+                });
+
+                $('#showRegisterPusher').on('click', function (e) {
+                    e.preventDefault(); // Prevent the default form submission
+                    $('#messagePusherForm').submit();
+                });
+
+                setTimeout(function () {
+                    $('#messagePusher').modal('hide');
+                }, 20000);
+
             });
+        }
+        var authID = {{\Illuminate\Support\Facades\Auth::id() }};
+        if ({{auth()->user()->guard === 'advisor'}}) {
+            var channel2 = pusher.subscribe('advisor');
+            channel2.bind('notify-advisor', function (data) {
+                if (authID === data.notifiable_id) {
+                    console.log(data)
+                    $('#messagePusher .modal-body').html(data.body);
+                    $('#messagePusher .modal-title').html(data.title);
+                    $('#messagePusher').modal('show');
+                    updateUnreadCount();
+                    var audio = document.getElementById('notification-sound');
+                    audio.play();
 
-            $('#showRegisterPusher').on('click', function (e) {
-                e.preventDefault(); // Prevent the default form submission
-                $('#messagePusherForm').submit();
+                    $('#messagePusher #messagePusherForm').attr('action', function () {
+                        var actionUrl = '{{ route("notificationsRead", ":notificationId") }}';
+                        actionUrl = actionUrl.replace(':notificationId', data.Notification_id);
+                        return actionUrl;
+                    });
+
+                    $('#showRegisterPusher').on('click', function (e) {
+                        e.preventDefault(); // Prevent the default form submission
+                        $('#messagePusherForm').submit();
+                    });
+
+                    setTimeout(function () {
+                        $('#messagePusher').modal('hide');
+                    }, 20000);
+                }
             });
-
-            setTimeout(function () {
-                $('#messagePusher').modal('hide');
-            }, 20000);
-
-        });
-
+        }
         $('#messagePusher #closePusher').on('click', function (e) {
             $('#messagePusher').modal('hide');
         });
