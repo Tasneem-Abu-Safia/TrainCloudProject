@@ -21,4 +21,12 @@ class Trainee extends Model
     {
         return $this->belongsToMany(Course::class, 'course_trainee');
     }
+
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class, 'trainee_field', 'trainee_id', 'field_id')
+            ->withPivot('status');
+    }
+
+
 }

@@ -16,4 +16,10 @@ class Field extends Model
     {
         return $this->belongsToMany(Advisor::class, 'advisor_field');
     }
+
+    public function trainees()
+    {
+        return $this->belongsToMany(Trainee::class, 'trainee_field', 'field_id', 'trainee_id')
+            ->withPivot('status');
+    }
 }

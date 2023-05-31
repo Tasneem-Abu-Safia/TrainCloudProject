@@ -154,6 +154,19 @@
                         </div>
                     @endif
                 </div>
+                <div class="form-outline mb-4">
+                    <select id="traineeFields" class="form-select" name="fields[]" multiple required>
+                        <option value="" selected disabled>Select Fields</option>
+                        @foreach($fields as $field)
+                            <option value="{{ $field->id }}">{{ $field->name }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('fields'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('fields') }}
+                        </div>
+                    @endif
+                </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupFileAddon01">Upload CV</span>

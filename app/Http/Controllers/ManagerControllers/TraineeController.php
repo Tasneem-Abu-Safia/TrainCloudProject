@@ -120,12 +120,13 @@ class TraineeController extends Controller
             'password' => $password,
         ];
         // Send activation email to the user
-        Mail::to($user->email)->send(new MailNotify($data));
+//        Mail::to($user->email)->send(new MailNotify($data));
 
         // Update user's unique_id, password, and status
         $user->unique_id = $uniqueId;
         $user->password = Hash::make($password); // Hash the password before storing it
         $trainee->status = 'active';
+        dd($trainee->fields);
         $user->status = 'active';
         $user->save();
         $trainee->save();

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\ManagerControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\ManagerMiddleware;
 use App\Http\Requests\CreateCourseRequest;
+use App\Http\Traits\FileUploadTrait;
 use App\Models\Advisor;
 use App\Models\Course;
 use App\Models\Field;
 use App\Models\Notification;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +19,16 @@ use Yajra\DataTables\DataTables;
 
 class CourseController extends Controller
 {
+    use FileUploadTrait;
+
     public function __construct()
     {
+        $this->middleware(function ($request, $next) {
+            if (Auth::user()->guard == 'manager' || Auth::user()->guard == 'advisor') {
+                return $next($request);
+            }
+            abort(403); // Unauthorized access
+        })->only(['index', 'show', 'getAllTrainee', 'getAllTask']);
         $this->middleware(ManagerMiddleware::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
@@ -30,11 +40,12 @@ class CourseController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($course) {
                     $buttons = '<div class="btn-group" role="group">
-                            <a href="' . route('courses.show', $course) . '" class="btn btn-light-primary"><i class="fas fa-eye"></i> View</a>
-                            <a href="' . route('getAllTrainee', $course) . '" class="btn btn-light-primary"><i class="fas fa-user-graduate"></i> View</a>';
+                            <a href="' . route('courses.show', $course) . '" class="btn btn-light-primary"><i class="fas fa-eye"></i></a>
+                            <a href="' . route('getAllTrainee', $course) . '" class="btn btn-light-primary"><i class="fas fa-user-graduate"></i></a>
+                            <a href="' . route('getAllTask', $course) . '" class="btn btn-light-primary"><i class="fas fa-tasks"></i></a>';
                     if (Auth::user()->guard == 'manager') {
-                        $buttons .= '<a href="' . route('courses.edit', $course) . '" class="btn btn-light-info"><i class="fas fa-edit"></i> Edit</a>
-                            <a class="mainDelete btn btn-light-danger" data-id="' . $course->id . '"><i class="fas fa-trash"></i> Delete</a>';
+                        $buttons .= '<a href="' . route('courses.edit', $course) . '" class="btn btn-light-info"><i class="fas fa-edit"></i></a>
+                            <a class="mainDelete btn btn-light-danger" data-id="' . $course->id . '"><i class="fas fa-trash"></i></a>';
                     }
                     $buttons .= '</div>';
                     return $buttons;
@@ -154,4 +165,36 @@ class CourseController extends Controller
 
     }
 
+    public function getAllTask(Request $request)
+    {
+        $courseId = $request->courseId;
+        $course = Course::findOrFail($courseId);
+        $courseName = $course->name;
+        if ($request->ajax()) {
+            $data = Task::with(['course', 'advisor'])->where('course_id', $courseId)->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($task) {
+                    $buttons = '<div class="btn-group" role="group">';
+                    if (Auth::user()->guard == 'advisor') {
+                        $buttons .= '<a href="' . route('tasks.edit', $task) . '" class="btn btn-light-info"><i class="fas fa-edit"></i></a>
+                        <a class="mainDelete btn btn-light-danger" data-id="' . $task->id . '"><i class="fas fa-trash"></i></a>';
+                    }
+                    $buttons .= '<a href="' . route('tasks.submissions', $task) . '" class="btn btn-light-primary">View Submissions</a>';
+                    $buttons .= '</div>';
+                    return $buttons;
+                })
+                ->addColumn('file', function ($task) {
+                    if ($task->file) {
+                        return '<a href="' . $this->getUploadedFireBase($task->file) . '" class="btn btn-light-primary" target="_blank">Show File</a>';
+                    } else {
+                        return '<p>No files uploaded.</p>';
+                    }
+                })
+                ->rawColumns(['action', 'file'])
+                ->make(true);
+        }
+        return view('layouts.course.allTask', compact('courseId', 'courseName'));
+
+    }
 }

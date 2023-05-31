@@ -25,8 +25,8 @@ class TaskController extends Controller
                 return $next($request);
             }
             abort(403); // Unauthorized access
-        })->only(['index', 'show']);
-        $this->middleware(AdvisorMiddleware::class)->only(['create', 'getTaskSubmissions', 'store', 'edit', 'update', 'destroy']);
+        })->only(['index', 'show', 'getTaskSubmissions']);
+        $this->middleware(AdvisorMiddleware::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
     public function index(Request $request)

@@ -240,7 +240,7 @@
 
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
-                            <i class="menu-icon fas fa-book"></i> <span class="menu-text">Tasks</span>
+                            <i class="menu-icon fas fa-tasks"></i> <span class="menu-text">Tasks</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <i class="menu-arrow"></i>
@@ -264,7 +264,6 @@
                         <h4 class="menu-text">Management</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                     </li>
-
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <i class="menu-icon fas fa-book"></i> <span class="menu-text">Courses</span>
@@ -285,10 +284,9 @@
                             </ul>
                         </div>
                     </li>
-
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
-                            <i class="menu-icon fas fa-book"></i> <span class="menu-text">Tasks</span>
+                            <i class="menu-icon fas fa-tasks"></i> <span class="menu-text">Tasks</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <i class="menu-arrow"></i>
@@ -319,7 +317,73 @@
                             </ul>
                         </div>
                 @endif
+                @if(\Illuminate\Support\Facades\Auth::user()->guard == 'trainee')
+                    <li class="menu-section">
+                        <h4 class="menu-text">Management</h4>
+                        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <i class="menu-icon fas fa-book"></i> <span class="menu-text">Courses</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <i class="menu-arrow"></i>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{route('getAllCourses')}}" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">Show Courses</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <i class="menu-icon fas fa-book"></i> <span class="menu-text">My Courses</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <i class="menu-arrow"></i>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{route('joined.courses')}}" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">My Courses</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <i class="menu-icon fas fa-book"></i> <span class="menu-text">Tasks</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <i class="menu-arrow"></i>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{route('myTasks')}}" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">My Tasks</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                @endif
 
                 <li class="menu-section">
                     <h4 class="menu-text">SETTINGS</h4>

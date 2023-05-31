@@ -96,6 +96,8 @@ class AuthController extends Controller
             'status' => 'inactive',
             'files' => $uploadedFiles,
         ]);
+        $fields = $request->input('fields');
+        $trainee->fields()->attach($fields);
         $this->pushNotificationManager($trainee->id, 'Trainee');
         DB::commit();
         // Redirect to a success page or perform any additional actions

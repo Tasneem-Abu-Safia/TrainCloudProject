@@ -15,12 +15,11 @@
         $("#msg").show().delay(3000).fadeOut();
 
         $(function () {
-            let modalDelete = $('#deleteModal');
             var table = $('#course-table');
             table.DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('courses.index') }}",
+                ajax: "{{ route('getAllCourses') }}",
                 columns: [
                     {data: 'course_num', name: 'id', width: '5%'},
                     {data: 'name', name: 'name', width: '10%'},
@@ -49,22 +48,8 @@
 
             });
 
-            table.on('click', '.mainDelete', function (e) {
-                e.preventDefault();
-                var id = $(this).data('id');
-                modalDelete.modal('show');
-                modalDelete.find('#deleteForm').attr('action', function () {
-                    var URL = "{{ route('courses.destroy', 'x') }}";
-                    return URL.replace('x', id);
-                });
-
-            });
-
-            $('#deleteModal #cancelModal').on('click', function (e) {
-                modalDelete.modal('hide');
-            });
-
         });
+
 
     </script>
 @endsection
@@ -75,9 +60,14 @@
         <div class="card card-flush mb-6 mb-xl-9">
 
             <div class="card-body pt-0">
-                @if(session()->has('msg'))
+                @if(session()->has('error'))
+                    <div class="alert alert-danger" id="msg">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
+                @if(session()->has('success'))
                     <div class="alert alert-success" id="msg">
-                        {{ session()->get('msg') }}
+                        {{ session()->get('success') }}
                     </div>
                 @endif
                 <div class="card card-custom">
@@ -86,17 +76,6 @@
                         <div class="card-title">
                             <h3 class="card-label">Courses List </h3>
                         </div>
-                        @if(\Illuminate\Support\Facades\Auth::user()->guard == 'manager')
-                            <div class="card-toolbar">
-                                <div class="d-flex align-items-center position-relative my-1"
-                                     data-kt-view-roles-table-toolbar="base">
-                                    <a href="{{route('courses.create')}}"
-                                       class="btn btn-sm btn-light-primary er fs-6 px-8 py-4">
-                                        <i class="la la-plus"></i> Create new Course
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
                     </div>
                     <div class="card-body">
                         <!--begin: Datatable-->

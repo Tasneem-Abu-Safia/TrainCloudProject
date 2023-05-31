@@ -9,6 +9,7 @@ use App\Http\Controllers\ManagerControllers\CourseController;
 use App\Http\Controllers\ManagerControllers\FieldController;
 use App\Http\Controllers\ManagerControllers\TraineeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\TraineeManagement\TraineeManagementController;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('courses', CourseController::class);
     Route::resource('tasks', TaskController::class);
     Route::get('/allTrainee/{courseId}', [CourseController::class, 'getAllTrainee'])->name('getAllTrainee');
+    Route::get('/allTask/{courseId}', [CourseController::class, 'getAllTask'])->name('getAllTask');
     Route::resource('taskSubmissions', TaskSubmissionController::class);
     Route::get('/tasks/{task}/submissions', [TaskController::class, 'getTaskSubmissions'])->name('tasks.submissions');
 
@@ -88,6 +90,14 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::middleware(['trainee'])->group(function () {
+        Route::get('/allCourses', [TraineeManagementController::class, 'getAllCourses'])->name('getAllCourses');
+        Route::get('trainee/course/{course_id}/show', [TraineeManagementController::class, 'showCourse'])->name('showCourse');
+        Route::post('courses/enroll/{course_id}', [TraineeManagementController::class, 'join'])->name('courses.enroll');
+        Route::get('joinedCourses', [TraineeManagementController::class, 'joinedCourses'])->name('joined.courses');
+        Route::get('myTasks', [TraineeManagementController::class, 'myTasks'])->name('myTasks');
+        Route::get('courses/{course}/joined-details', [TraineeManagementController::class, 'courseJoinedDetails'])->name('courseJoinedDetails');
+        Route::post('/trainee/submit-task/{taskId}', [TraineeManagementController::class, 'submitTask'])->name('trainee.submitTask');
+
     });
 
 

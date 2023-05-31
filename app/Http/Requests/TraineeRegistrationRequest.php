@@ -24,6 +24,8 @@ class TraineeRegistrationRequest extends FormRequest
             'address' => 'required|string|max:255',
             'degree' => 'required|in:bachelor,master,phd',
             'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'fields' => 'required|array',
+            'fields.*' => 'exists:fields,id',
         ];
     }
 }

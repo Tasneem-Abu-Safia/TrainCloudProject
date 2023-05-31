@@ -52,8 +52,10 @@ class Course extends Model
         if (auth()->user()->guard == 'advisor') {
             return $query->where([
                 'advisor_id' => Auth::user()->advisor->id,
-                'end_date' >= date('Y-m-d'),
-            ]);
+            ])->where('end_date', '>=', date('Y-m-d'));
+        }
+        if (auth()->user()->guard == 'trainee') {
+            return $query->where('end_date', '>=', date('Y-m-d'));
         }
         return $query;
     }
