@@ -31,4 +31,15 @@ class Advisor extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+    public function courseTrainees()
+    {
+        return $this->hasMany(CourseTrainee::class, 'advisor_id');
+    }
+
+
 }

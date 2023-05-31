@@ -4,9 +4,12 @@ namespace App\Http\Controllers\TraineeManagement;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\FileUploadTrait;
+use App\Models\AttendanceRecord;
 use App\Models\Course;
 use App\Models\Task;
 use App\Models\TaskSubmission;
+use App\Models\Trainee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,9 +72,9 @@ class TraineeManagementController extends Controller
     public function join(Request $request)
     {
         $course = Course::findOrFail($request->course_id);
+        $trainee = Auth::user()->trainee;
 
         // Check if trainee already joined the course
-        $trainee = Auth::user()->trainee;
         if ($trainee->courses->contains($course)) {
             return back()->with('error', 'You have already joined this course.');
         }
@@ -81,11 +84,34 @@ class TraineeManagementController extends Controller
             return back()->with('error', 'Course is full. Cannot enroll.');
         }
 
-        // Enroll the trainee to the course
-        $course->trainees()->attach($trainee->id);
+        // Check if course has no fees, join directly
+        if ($course->fees == 0) {
+            $course->trainees()->attach($trainee->id, ['advisor_id' => $course->advisor_id]);
+            return back()->with('success', 'You have successfully enrolled in the course.');
+        }
 
-        return back()->with('success', 'You have successfully enrolled in the course. Wait Manager Accept');
+        // Check if trainee has billing
+        $billing = $trainee->billing;
+        if (!$billing) {
+            return redirect()->route('billings.create')->with('error', 'You need to add billing information before joining the course.');
+        }
+
+        // Check if billing is inactive
+        if ($billing->payment_status == 'inactive') {
+            return back()->with('error', 'Please wait for the manager to activate your billing.');
+        }
+
+        // Check if trainee has enough funds to join the course
+        if ($billing->amount_due >= $course->fees) {
+            $billing->amount_due -= $course->fees;
+            $billing->save();
+            $course->trainees()->attach($trainee->id, ['advisor_id' => $course->advisor_id]);
+            return back()->with('success', 'You have successfully enrolled in the course. Wait for Manager acceptance.');
+        } else {
+            return back()->with('error', 'No available amount. Insufficient funds to join the course.');
+        }
     }
+
 
     public function joinedCourses(Request $request)
     {
@@ -100,14 +126,15 @@ class TraineeManagementController extends Controller
                     $traineeJoined = $course->trainees()->wherePivot('trainee_id', Auth::user()->trainee->id)
                         ->wherePivot('status', 'active')->exists();
                     if ($traineeJoined) {
-                        $buttons .= '<a href="' . route('courseJoinedDetails', $course->id) . '" class="btn btn-light-info"><i class="fas fa-fa-info-circle"></i>Details</a>';
+                        $buttons .= '<a href="' . route('courseJoinedDetails', $course->id) . '" class="btn btn-light-info"><i class="fas fa-info-circle"></i>Details</a>';
+                        $buttons .= '<button class="btn btn-light-primary attendance" data-id="' . $course->id . '" data-course="' . htmlentities(json_encode($course)) . '"><i class="fas fa-check"></i> Attendance</button>';
                     } else {
                         $buttons .= '<form class="d-inline" action="' . route('courses.enroll', $course->id) . '" method="POST">
-                            <input type="hidden" name="_token" value="' . csrf_token() . '">
-                            <button type="submit" class="btn btn-light-success joinCourse" data-id="' . $course->id . '">
-                                <i class="fas fa-plus"></i> Join
-                            </button>
-                        </form>';
+                        <input type="hidden" name="_token" value="' . csrf_token() . '">
+                        <button type="submit" class="btn btn-light-success joinCourse" data-id="' . $course->id . '">
+                            <i class="fas fa-plus"></i> Join
+                        </button>
+                    </form>';
                     }
 
                     $buttons .= '</div>';
@@ -120,6 +147,7 @@ class TraineeManagementController extends Controller
 
         return view('trainee.coursesJoined');
     }
+
 
     public function courseJoinedDetails(Course $course)
     {
@@ -187,6 +215,30 @@ class TraineeManagementController extends Controller
         }
 
         return view('trainee.myTasks', compact('tasks'));
-
     }
+
+    public function addAttendance(Request $request)
+    {
+        try {
+            $courseId = $request->courseId;
+            $attendanceDates = $request->attendance;
+
+            // Retrieve the course
+            $course = Course::findOrFail($courseId);
+
+            // Loop through the attendance dates
+            foreach ($attendanceDates as $attendanceDate) {
+                AttendanceRecord::create([
+                    'course_id' => $course->id,
+                    'trainee_id' => Auth::user()->trainee->id,
+                    'date' => $attendanceDate,
+                    'status' => 'present' // You can adjust the status as needed
+                ]);
+            }
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Attendance is pre-registered']);
+        }
+    }
+
 }

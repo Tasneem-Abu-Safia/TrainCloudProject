@@ -28,5 +28,20 @@ class Trainee extends Model
             ->withPivot('status');
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function attendanceRecords()
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
+
+    public function billing()
+    {
+        return $this->hasOne(Billing::class);
+    }
+
 
 }

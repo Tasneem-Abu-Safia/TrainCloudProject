@@ -28,7 +28,7 @@ class CourseController extends Controller
                 return $next($request);
             }
             abort(403); // Unauthorized access
-        })->only(['index', 'show', 'getAllTrainee', 'getAllTask']);
+        })->only(['index', 'show', 'getAllTrainee', 'getAllTask', 'showAttendance']);
         $this->middleware(ManagerMiddleware::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
@@ -40,14 +40,16 @@ class CourseController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($course) {
                     $buttons = '<div class="btn-group" role="group">
-                            <a href="' . route('courses.show', $course) . '" class="btn btn-light-primary"><i class="fas fa-eye"></i></a>
-                            <a href="' . route('getAllTrainee', $course) . '" class="btn btn-light-primary"><i class="fas fa-user-graduate"></i></a>
-                            <a href="' . route('getAllTask', $course) . '" class="btn btn-light-primary"><i class="fas fa-tasks"></i></a>';
+                    <a href="' . route('courses.show', $course) . '" class="btn btn-light-primary"><i class="fas fa-eye"></i></a>
+                    <a href="' . route('getAllTrainee', $course) . '" class="btn btn-light-primary"><i class="fas fa-user-graduate"></i></a>
+                    <a href="' . route('getAllTask', $course) . '" class="btn btn-light-primary"><i class="fas fa-tasks"></i></a>';
                     if (Auth::user()->guard == 'manager') {
                         $buttons .= '<a href="' . route('courses.edit', $course) . '" class="btn btn-light-info"><i class="fas fa-edit"></i></a>
-                            <a class="mainDelete btn btn-light-danger" data-id="' . $course->id . '"><i class="fas fa-trash"></i></a>';
+                        <a class="mainDelete btn btn-light-danger" data-id="' . $course->id . '"><i class="fas fa-trash"></i></a>';
                     }
-                    $buttons .= '</div>';
+                    $buttons .= '<a href="' . route('attendance.show', $course) . '" class="btn btn-light-primary">
+                            <i class="fas fa-calendar-check"></i> </a></div>';
+
                     return $buttons;
                 })
                 ->rawColumns(['action'])
@@ -196,5 +198,11 @@ class CourseController extends Controller
         }
         return view('layouts.course.allTask', compact('courseId', 'courseName'));
 
+    }
+
+    public function showAttendance(Course $course)
+    {
+        $attendance = $course->attendanceRecords;
+        return view('layouts.course.attendance', compact('attendance', 'course'));
     }
 }

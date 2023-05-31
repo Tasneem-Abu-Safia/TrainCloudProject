@@ -42,6 +42,12 @@ class Course extends Model
         return $this->belongsToMany(Trainee::class, 'course_trainee');
     }
 
+
+    public function attendanceRecords()
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
+
     public function advisors()
     {
         return $this->belongsToMany(Advisor::class, 'course_advisor');

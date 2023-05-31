@@ -148,7 +148,7 @@ class TaskController extends Controller
                     if (Auth::user()->guard == 'advisor') {
                         $buttons = '<div class="btn-group" role="group">';
                         // Add mark button
-                        $buttons .= '<button class="btn btn-light-primary btn-mark" data-submission-id="' . $submission->id . '"><i class="fas fa-check"></i> Mark</button>';
+                        $buttons .= '<button class="btn btn-light-primary btn-mark" data-submission-id="' . $submission->id . '" data-toggle="modal" data-target="#markModal"><i class="fas fa-check"></i> Mark</button>';
                         // Add delete button
                         $buttons .= '<button class="btn btn-light-danger mainDelete" data-id="' . $submission->id . '"><i class="fas fa-trash"></i> Delete</button>';
                         $buttons .= '</div>';

@@ -102,7 +102,18 @@
                                 <input type="text" class="form-control" id="degree" value="{{ $trainee->degree }}"
                                        disabled>
                             </div>
-
+                            <div class="form-group">
+                                <label for="fields">Fields:</label>
+                                @if ($trainee->fields->count() > 0)
+                                    <ul>
+                                        @foreach ($trainee->fields as $field)
+                                            <li>{{ $field->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p>No fields associated.</p>
+                                @endif
+                            </div>
                             <div class="form-group">
                                 <label for="status">Status:</label>
                                 <input type="text"

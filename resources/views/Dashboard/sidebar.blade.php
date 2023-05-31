@@ -124,6 +124,19 @@
                                 </li>
                             </ul>
                         </div>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="{{route('billings.requests')}}" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">Billings Requests</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
                     </li>
 
@@ -257,6 +270,13 @@
                                 </li>
                             </ul>
                         </div>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('billings.index')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon
+                                    fas fa-money-bill"></i>
+                            <span class="menu-text">Payment Method</span>
+                        </a>
+                    </li>
                 @endif
 
                 @if(\Illuminate\Support\Facades\Auth::user()->guard == 'advisor')
@@ -316,6 +336,14 @@
                                 </li>
                             </ul>
                         </div>
+
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('meetings.index')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon
+                                    fas fa-calendar"></i>
+                            <span class="menu-text">Meetings Requests</span>
+                        </a>
+                    </li>
                 @endif
                 @if(\Illuminate\Support\Facades\Auth::user()->guard == 'trainee')
                     <li class="menu-section">
@@ -382,6 +410,20 @@
                                 </li>
                             </ul>
                         </div>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('meetings.index')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon
+                                    fas fa-calendar"></i>
+                            <span class="menu-text">Meetings Requests</span>
+                        </a>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('billings.create')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon
+                                    fas fa-money-bill"></i>
+                            <span class="menu-text">Payment Method</span>
+                        </a>
                     </li>
                 @endif
 

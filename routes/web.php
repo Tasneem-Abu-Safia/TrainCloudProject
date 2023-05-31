@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\AdvisorControllers\TaskController;
 use App\Http\Controllers\AdvisorControllers\TaskSubmissionController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ManagerControllers\CourseTraineeController;
 use App\Http\Controllers\ManagerControllers\AdvisorController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ManagerControllers\CourseController;
 use App\Http\Controllers\ManagerControllers\FieldController;
 use App\Http\Controllers\ManagerControllers\TraineeController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TraineeManagement\TraineeManagementController;
 use App\Models\Notification;
@@ -61,6 +63,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/allTask/{courseId}', [CourseController::class, 'getAllTask'])->name('getAllTask');
     Route::resource('taskSubmissions', TaskSubmissionController::class);
     Route::get('/tasks/{task}/submissions', [TaskController::class, 'getTaskSubmissions'])->name('tasks.submissions');
+    Route::get('/attendance/{course}', [CourseController::class, 'showAttendance'])->name('attendance.show');
 
     Route::middleware(['manager'])->group(function () {
         // Trainee routes
@@ -86,6 +89,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/course-trainees/inactive/{courseId}/{traineeId}', [CourseTraineeController::class, 'inactive']);
         Route::delete('/course-trainees/destroy/{courseId}/{traineeId}', [CourseTraineeController::class, 'destroy']);
 
+        //billing
+        Route::get('billing-active/{billing_id}', [BillingController::class, 'active'])->name('billingActive');
+        Route::get('billing-deActive/{billing_id}', [BillingController::class, 'deActive'])->name('billingDeActive');
+        Route::get('billing-requests', [BillingController::class, 'requests'])->name('billings.requests');
+
     });
 
 
@@ -97,11 +105,20 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('myTasks', [TraineeManagementController::class, 'myTasks'])->name('myTasks');
         Route::get('courses/{course}/joined-details', [TraineeManagementController::class, 'courseJoinedDetails'])->name('courseJoinedDetails');
         Route::post('/trainee/submit-task/{taskId}', [TraineeManagementController::class, 'submitTask'])->name('trainee.submitTask');
+        Route::get('/trainee/meetingAdvisor', [MeetingController::class, 'courseAdvisors'])->name('trainee.advisors');
+        Route::put('/meetings/{meeting}/cancel', [MeetingController::class, 'cancel'])->name('meetings.cancel');
+
 
     });
 
 
     Route::middleware(['advisor'])->group(function () {
         Route::put('/submissions/{submission}/mark', [TaskSubmissionController::class, 'updateMark'])->name('submissions.update.mark');
+        Route::post('/meetings/send-email', [MeetingController::class, 'sendEmail'])->name('sendEmail');
+        Route::post('/meetings/updateStatus', [MeetingController::class, 'updateStatus'])->name('updateMeetingStatus');
     });
+    Route::resource('meetings', MeetingController::class);
+    Route::resource('billings', BillingController::class);
+
 });
+Route::post('/addAttendance', [TraineeManagementController::class, 'addAttendance'])->name('addAttendance');

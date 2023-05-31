@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CourseTrainee extends Model
+class AttendanceRecord extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'course_trainee';
-    protected $fillable = ['course_id', 'trainee_id', 'advisor_id'];
+    protected $fillable = ['course_id', 'trainee_id', 'status', 'date'];
 
     public function course()
     {
@@ -21,11 +21,4 @@ class CourseTrainee extends Model
     {
         return $this->belongsTo(Trainee::class);
     }
-
-    public function advisor()
-    {
-        return $this->belongsTo(Advisor::class, 'advisor_id');
-    }
-
-
 }

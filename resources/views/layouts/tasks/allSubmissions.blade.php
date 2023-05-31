@@ -58,6 +58,19 @@
             });
 
         });
+        $(document).on('click', '.btn-mark', function() {
+            // Get the submission ID from the data attribute
+            var submissionId = $(this).data('submission-id');
+
+            // Set the submission ID in the form action URL
+            $('#markForm').attr('action', '/submit-mark/' + submissionId);
+
+            // Reset the mark input value
+            $('#markInput').val('');
+
+            // Show the mark modal
+            $('#markModal').modal('show');
+        });
         $(document).ready(function () {
             $('#markModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
@@ -144,8 +157,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="markModal" role="dialog" aria-labelledby="markModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="markModal" role="dialog" aria-labelledby="markModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
