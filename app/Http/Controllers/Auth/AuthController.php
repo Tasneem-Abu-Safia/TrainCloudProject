@@ -154,7 +154,7 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        $user->password = Hash::make($request->new_password);
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return redirect()->back()->with('msg', 'Password changed successfully.');
@@ -187,6 +187,7 @@ class AuthController extends Controller
             ];
             // Send activation email to the user
             Mail::to($user->email)->send(new ForgotPass($data));
+            $user->save();
             return back()->with('success', 'Email send Successfully');
 
         }

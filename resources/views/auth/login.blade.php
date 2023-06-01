@@ -137,6 +137,7 @@
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Send Password Reset Email</button>
+                    <button type="button" class="btn btn-secondary closeForgot">Close</button>
                 </form>
             </div>
         </div>
@@ -161,7 +162,7 @@
         });
 
         // Close the modal when the close button is clicked
-        const closeModalButton = forgotPasswordModal.querySelector(".close");
+        const closeModalButton = forgotPasswordModal.querySelector(".closeForgot");
         closeModalButton.addEventListener("click", function () {
             if (typeof bootstrap !== "undefined") {
                 // Use Bootstrap's modal function if available
