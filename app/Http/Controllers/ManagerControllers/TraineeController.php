@@ -104,9 +104,7 @@ class TraineeController extends Controller
             $user->save();
             $trainee->save();
             return response()->json(['msg' => 'Trainee Active']);
-
         }
-
         // Generate a unique_id and password for the user
         $uniqueId = str_pad(mt_rand(1, 9999999999), 10, '0', STR_PAD_LEFT);
         while (User::where('unique_id', $uniqueId)->exists()) {
@@ -120,13 +118,12 @@ class TraineeController extends Controller
             'password' => $password,
         ];
         // Send activation email to the user
-//        Mail::to($user->email)->send(new MailNotify($data));
+        Mail::to($user->email)->send(new MailNotify($data));
 
         // Update user's unique_id, password, and status
         $user->unique_id = $uniqueId;
         $user->password = Hash::make($password); // Hash the password before storing it
         $trainee->status = 'active';
-        dd($trainee->fields);
         $user->status = 'active';
         $user->save();
         $trainee->save();

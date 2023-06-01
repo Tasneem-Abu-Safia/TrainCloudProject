@@ -9,51 +9,52 @@
 @endsection
 @section('js')
     <script>
-        var statusInput = $('#status');
+        jQuery(document).ready(function () {
+            var statusInput = $('#status');
+            // Activate Trainee
+            $('.activateBtn').click(function (e) {
+                e.preventDefault();
+                var traineeId = $(this).data('trainee-id');
+                $.ajax({
+                    url: '/trainee-active/' + traineeId,
+                    method: 'GET',
+                    success: function (response) {
+                        // Update the button text and class
+                        $('.activateBtn[data-trainee-id="' + traineeId + '"]')
+                            .text('Deactivate')
+                            .removeClass('btn-light-success activateBtn')
+                            .addClass('btn-light-danger deactivateBtn');
+                        $('#status').val('active').addClass('border-success').removeClass('border-danger');
+                        location.reload();
 
-        // Activate Trainee
-        $('.activateBtn').click(function (e) {
-            e.preventDefault();
-            var traineeId = $(this).data('trainee-id');
-            $.ajax({
-                url: '/trainee-active/' + traineeId,
-                method: 'GET',
-                success: function (response) {
-                    // Update the button text and class
-                    $('.activateBtn[data-trainee-id="' + traineeId + '"]')
-                        .text('Deactivate')
-                        .removeClass('btn-light-success activateBtn')
-                        .addClass('btn-light-danger deactivateBtn');
-                    $('#status').val('active').addClass('border-success').removeClass('border-danger');
-                    location.reload();
-
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
             });
-        });
 
-        // Deactivate Trainee
-        $('.deactivateBtn').click(function (e) {
-            e.preventDefault();
-            var traineeId = $(this).data('trainee-id');
-            $.ajax({
-                url: '/trainee-deActive/' + traineeId,
-                method: 'GET',
-                success: function (response) {
-                    // Update the button text and class
-                    $('.deactivateBtn[data-trainee-id="' + traineeId + '"]')
-                        .text('Activate')
-                        .removeClass('btn-light-danger deactivateBtn')
-                        .addClass('btn-light-danger activateBtn');
-                    $('#status').val('inactive').addClass('border-danger').removeClass('border-success');
-                    location.reload();
+            // Deactivate Trainee
+            $('.deactivateBtn').click(function (e) {
+                e.preventDefault();
+                var traineeId = $(this).data('trainee-id');
+                $.ajax({
+                    url: '/trainee-deActive/' + traineeId,
+                    method: 'GET',
+                    success: function (response) {
+                        // Update the button text and class
+                        $('.deactivateBtn[data-trainee-id="' + traineeId + '"]')
+                            .text('Activate')
+                            .removeClass('btn-light-danger deactivateBtn')
+                            .addClass('btn-light-danger activateBtn');
+                        $('#status').val('inactive').addClass('border-danger').removeClass('border-success');
+                        location.reload();
 
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
             });
         });
     </script>
@@ -81,7 +82,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="id">Unique Id:</label>
-                                <input type="text" class="form-control" id="id" value="{{ $trainee->user->unique_id ?? '' }}"
+                                <input type="text" class="form-control" id="id"
+                                       value="{{ $trainee->user->unique_id ?? '' }}"
                                        disabled>
                             </div>
 
@@ -124,7 +126,8 @@
                             <div class="form-group">
                                 <label for="files">Files:</label>
                                 @if ($trainee->files)
-                                    <a href="{{ asset($trainee->files) }}" class="btn btn-light-primary" target="_blank">Open CV</a>
+                                    <a href="{{ asset($trainee->files) }}" class="btn btn-light-primary"
+                                       target="_blank">Open CV</a>
                                 @else
                                     <p>No files uploaded.</p>
                                 @endif

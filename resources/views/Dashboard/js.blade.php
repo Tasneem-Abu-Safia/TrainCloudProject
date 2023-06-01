@@ -84,7 +84,7 @@
 
 
 <script>
-    $(document).ready(function () {
+    jQuery(document).ready(function () {
         Pusher.logToConsole = true;
         var pusher = new Pusher('1e58abe6fe45f3bd2e73', {
             cluster: 'ap3',
