@@ -25,7 +25,7 @@ trait FileUploadTrait
 
     public function uploadFilesFireBase($request)
     {
-        $firebaseCredentialsPath = storage_path('app/' . env('FIREBASE_CREDENTIALS_PATH'));
+        $firebaseCredentialsPath = storage_path(env('FIREBASE_CREDENTIALS_PATH'));
         $storage = new StorageClient([
             'projectId' => 'trainmanagement-b559e',
             'keyFilePath' => $firebaseCredentialsPath,
