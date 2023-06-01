@@ -9,10 +9,10 @@
 <p>We have received a request to reset your password.</p>
 <p>Your new login credentials are:</p>
 <ul>
-    <li><strong>Unique ID:</strong> {{ $data['uniqueId'] }}</li>
     <li><strong>New Password:</strong> {{ $data['password'] }}</li>
 </ul>
-<p>Please keep these credentials safe and secure. You can use them to log in to your account.</p>
+<p>Login again with Your Email and the new Password. <br>
+    Please keep these credentials safe and secure. You can use them to log in to your account.</p>
 <p>If you didn't request this password reset, please ignore this email.</p>
 <p>Thank you!</p>
 </body>

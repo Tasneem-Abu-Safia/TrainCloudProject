@@ -182,7 +182,6 @@ class AuthController extends Controller
             $user->password = Hash::make($password);
             $data = [
                 'user' => $user->name,
-                'uniqueId' => $user->unique_id,
                 'password' => $password,
             ];
             // Send activation email to the user
