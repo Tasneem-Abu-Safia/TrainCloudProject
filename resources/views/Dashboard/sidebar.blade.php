@@ -439,6 +439,15 @@
                         <span class="menu-text">Change Password</span>
                     </a>
                 </li>
+                @if(Auth::user()->guard == 'advisor' || Auth::user()->guard == 'trainee')
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('getEditProfile')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon
+                                    fas fa-user-edit"></i>
+                            <span class="menu-text">Update Profile</span>
+                        </a>
+                    </li>
+                @endif
                 <li class="menu-item" aria-haspopup="true">
                     <a class="menu-link" onclick="document.getElementById('logout').submit()">
                         <i class="menu-icon
@@ -460,4 +469,27 @@
     </div>
     <!--end::Aside Menu-->
 </div>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script>
+
+    jQuery(document).ready(function () {
+    updateUnreadCount(); // Call the function on page load
+    function updateUnreadCount() {
+        console.log('hikkkk');
+        jQuery.ajax({
+            url: "{{ route('notifications.count') }}",
+            method: "GET",
+            success: function (data) {
+                console.log(data);
+                $('#unreadCount').text(data);
+
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }});
+
+</script>
 <!--end::Aside-->

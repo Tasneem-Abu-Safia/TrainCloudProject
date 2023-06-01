@@ -53,6 +53,8 @@
         },
         "font-family": "Poppins"
     };</script>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+
 <!--end::Global Config-->
 <!--begin::Global Theme Bundle(used by all pages)-->
 <script src="{{asset('admin/assets/plugins/global/plugins.bundle.js')}}"></script>
@@ -82,7 +84,6 @@
 
 
 <script>
-
     $(document).ready(function () {
         Pusher.logToConsole = true;
         var pusher = new Pusher('1e58abe6fe45f3bd2e73', {
@@ -150,22 +151,7 @@
         $('#messagePusher #closePusher').on('click', function (e) {
             $('#messagePusher').modal('hide');
         });
-    });
 
-    $(document).ready(function () {
-        updateUnreadCount(); // Call the function on page load
-        function updateUnreadCount() {
-            $.ajax({
-                url: "{{ route('notifications.count') }}",
-                method: "GET",
-                success: function (data) {
-                    $('#unreadCount').text(data);
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
     });
 
 </script>

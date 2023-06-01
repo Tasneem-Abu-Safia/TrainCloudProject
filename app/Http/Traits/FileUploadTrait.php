@@ -52,7 +52,7 @@ trait FileUploadTrait
     function getUploadedFireBase($filePath)
     {
         if (!empty($filePath)) {
-            $firebaseCredentialsPath = storage_path('app/' . env('FIREBASE_CREDENTIALS_PATH'));
+            $firebaseCredentialsPath = storage_path(env('FIREBASE_CREDENTIALS_PATH'));
             $storage = new StorageClient([
                 'projectId' => 'trainmanagement-b559e',
                 'keyFilePath' => $firebaseCredentialsPath,

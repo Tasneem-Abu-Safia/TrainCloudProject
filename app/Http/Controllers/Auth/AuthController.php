@@ -24,6 +24,16 @@ use Pusher\Pusher;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Auth::user()->guard == 'trainee' || Auth::user()->guard == 'advisor') {
+                return $next($request);
+            }
+            abort(403); // Unauthorized access
+        })->only(['updateProfile']);
+    }
+
     use FileUploadTrait;
 
     public function getLogin()
@@ -204,5 +214,50 @@ class AuthController extends Controller
             'body' => 'New ' . $type . ' Register #' . $register_id,
             'Notification_id' => $notification->id,
         ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        // Validate the form data
+        $validatedData = Validator::make($request->all(), [
+            'name' => 'required|string|max:25',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'required|regex:/^\+?[0-9]{1,3}[-. ]?\(?[0-9]{1,}\)?[-. ]?[0-9]{1,}[-. ]?[0-9]{1,}$/',
+            'address' => 'required|string|max:255',
+            'degree' => 'required|in:bachelor,master,phd',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'fields' => 'required|array',
+            'fields.*' => 'exists:fields,id',
+        ]);
+        if ($validatedData->fails()) {
+            return redirect()->route('getEditProfile')->with('error', $validatedData->errors()->first());
+        }
+        // Update the user details
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->save();
+
+        // Update the profile details based on the user's guard
+        $guard = null;
+        if ($user->guard == 'trainee') {
+            $guard = $user->trainee;
+        } else if ($user->guard == 'advisor') {
+            $guard = $user->advisor;
+        }
+        if ($guard) {
+            $guard->phone = $request['phone'];
+            $guard->address = $request['address'];
+            $guard->degree = $request['degree'];
+            $guard->fields()->attach($request['fields']);
+            // Handle file upload if provided
+            if ($request->hasFile('files')) {
+                $file = $request->file('files');
+                $filePath = $this->uploadFilesFireBase($request);
+                $guard->files = $filePath;
+            }
+            $guard->save();
+            return redirect()->route('getEditProfile')->with('success', 'Profile Update Successfully.');
+        }
     }
 }

@@ -44,6 +44,11 @@ Route::group(['middleware' => 'auth'], function () {
         return view('auth.changePassword');
     }])->name('getChangePassword');
     Route::put('changePass', [AuthController::class, 'changePass'])->name('changePassword');
+    Route::get('openEditProfile', [AuthController::class, function () {
+        $fields = \App\Models\Field::all();
+        return view('auth.updateProfile', compact('fields'));
+    }])->name('getEditProfile');
+    Route::put('updateProfile', [AuthController::class, 'updateProfile'])->name('updateProfile');
     Route::post('/logout', [AuthController::class, 'Logout'])->name('logout');
 
     //Notification
