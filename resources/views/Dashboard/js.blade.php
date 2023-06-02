@@ -156,4 +156,18 @@
 
     })
 
+    function updateUnreadCount() {
+        jQuery.ajax({
+            url: "{{ route('notifications.count') }}",
+            method: "GET",
+            success: function (data) {
+                $('#unreadCount').text(data);
+
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
 </script>

@@ -36,7 +36,8 @@ trait FileUploadTrait
         // Store CV Files
         if ($request->hasFile('file')) {
             $cvFile = $request->file('file');
-            $cvPath = 'Files/' . ($request->name ?? $request->title) . '.' . time() + rand(1, 10000000) . '.' . $cvFile->getClientOriginalName();
+            $cvPath = 'Files/' . ($request->name ?? $request->title) . '.' . time() + rand(1, 10000000) .
+                '.' . $cvFile->getClientOriginalName();
             $bucket->upload(
                 file_get_contents($cvFile),
                 [

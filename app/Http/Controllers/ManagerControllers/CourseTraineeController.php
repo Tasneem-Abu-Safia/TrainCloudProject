@@ -103,7 +103,7 @@ class CourseTraineeController extends Controller
         return back()->with(['message' => 'Course trainee deleted successfully']);
     }
 
-
+//acceept Trainee in course
     public function active($course_id, $trainee_id)
     {
         $course = Course::findOrFail($course_id);
