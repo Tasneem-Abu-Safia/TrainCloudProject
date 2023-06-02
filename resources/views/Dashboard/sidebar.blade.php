@@ -482,12 +482,10 @@
     jQuery(document).ready(function () {
         updateUnreadCount(); // Call the function on page load
         function updateUnreadCount() {
-            console.log('hikkkk');
             jQuery.ajax({
                 url: "{{ route('notifications.count') }}",
                 method: "GET",
                 success: function (data) {
-                    console.log(data);
                     $('#unreadCount').text(data);
 
                 },

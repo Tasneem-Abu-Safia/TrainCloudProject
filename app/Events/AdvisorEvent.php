@@ -27,7 +27,7 @@ class AdvisorEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['advisor'];
+        return new Channel('advisor');
     }
 
     public function broadcastAs()

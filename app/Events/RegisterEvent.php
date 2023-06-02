@@ -28,7 +28,7 @@ class RegisterEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['newRegister'];
+        return new Channel('newRegister');
     }
 
     public function broadcastAs()
