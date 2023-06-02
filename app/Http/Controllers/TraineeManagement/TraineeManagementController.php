@@ -103,8 +103,8 @@ class TraineeManagementController extends Controller
 
         // Check if trainee has enough funds to join the course
         if ($billing->amount_due >= $course->fees) {
-            $billing->amount_due -= $course->fees;
-            $billing->save();
+//            $billing->amount_due -= $course->fees;
+//            $billing->save();
             $course->trainees()->attach($trainee->id, ['advisor_id' => $course->advisor_id]);
             return back()->with('success', 'You have successfully enrolled in the course. Wait for Manager acceptance.');
         } else {

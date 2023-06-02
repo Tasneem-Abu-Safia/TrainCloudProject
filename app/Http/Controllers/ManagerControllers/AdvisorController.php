@@ -5,7 +5,11 @@ namespace App\Http\Controllers\ManagerControllers;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\FileUploadTrait;
 use App\Mail\MailNotify;
+use App\Mail\TrainingNotification;
 use App\Models\Advisor;
+use App\Models\Course;
+use App\Models\CourseTrainee;
+use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -168,5 +172,38 @@ class AdvisorController extends Controller
         return view('layouts.advisor.requests');
 
     }
+
+
+    public function sendEmail(Request $request)
+    {
+        $validatedData = $request->validate([
+            'subject' => 'required',
+            'message' => 'required',
+            'course' => 'required|array',
+            'course.*' => 'exists:courses,id',
+        ]);
+
+        $subject = $validatedData['subject'];
+        $message = $validatedData['message'];
+        $courseIds = $validatedData['course'];
+
+        foreach ($courseIds as $courseId) {
+            $course = Course::findOrfail($courseId);
+            $trainees = CourseTrainee::where('course_id', $courseId)
+                ->where('status', 'active')
+                ->pluck('trainee_id');
+
+            $traineeEmails = Trainee::whereIn('trainees.id', $trainees)
+                ->join('users', 'trainees.user_id', '=', 'users.id')
+                ->pluck('users.email');
+
+            foreach ($traineeEmails as $email) {
+                Mail::to($email)->send(new TrainingNotification($subject, $message, $course));
+            }
+        }
+
+        return redirect()->back()->with('success', 'Emails sent successfully!');
+    }
+
 
 }

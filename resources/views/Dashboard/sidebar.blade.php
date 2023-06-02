@@ -73,9 +73,9 @@
                     </a>
                 </li>
 
-                @if(Auth::user()->guard === 'manager')
+                @if(Auth::user()->guard === 'manager' || Auth::user()->guard === 'advisor')
                     <li class="menu-section">
-                        <h4 class="menu-text">System Management</h4>
+                        <h4 class="menu-text">Requests</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                     </li>
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
@@ -84,33 +84,47 @@
                             <i class="menu-arrow"></i>
                         </a>
                         <i class="menu-arrow"></i>
-                        <div class="menu-submenu">
-                            <i class="menu-arrow"></i>
-                            <ul class="menu-subnav">
-                                <li class="menu-item" aria-haspopup="true">
-                                    <a href="{{route('traineeRequests')}}" class="menu-link">
-                                        <i class="menu-bullet menu-bullet-dot">
-                                            <span></span>
-                                        </i>
-                                        <span class="menu-text">Trainee Requests</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="menu-submenu">
-                            <i class="menu-arrow"></i>
-                            <ul class="menu-subnav">
-                                <li class="menu-item" aria-haspopup="true">
-                                    <a href="{{route('advisorRequests')}}" class="menu-link">
-                                        <i class="menu-bullet menu-bullet-dot">
-                                            <span></span>
-                                        </i>
-                                        <span class="menu-text">Advisors Requests</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
+                        @if(Auth::user()->guard === 'manager')
+                            <div class="menu-submenu">
+                                <i class="menu-arrow"></i>
+                                <ul class="menu-subnav">
+                                    <li class="menu-item" aria-haspopup="true">
+                                        <a href="{{route('traineeRequests')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Trainee Requests</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="menu-submenu">
+                                <i class="menu-arrow"></i>
+                                <ul class="menu-subnav">
+                                    <li class="menu-item" aria-haspopup="true">
+                                        <a href="{{route('advisorRequests')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Advisors Requests</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="menu-submenu">
+                                <i class="menu-arrow"></i>
+                                <ul class="menu-subnav">
+                                    <li class="menu-item" aria-haspopup="true">
+                                        <a href="{{route('billings.requests')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Billings Requests</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        @endif
                         <div class="menu-submenu">
                             <i class="menu-arrow"></i>
                             <ul class="menu-subnav">
@@ -124,22 +138,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="menu-submenu">
-                            <i class="menu-arrow"></i>
-                            <ul class="menu-subnav">
-                                <li class="menu-item" aria-haspopup="true">
-                                    <a href="{{route('billings.requests')}}" class="menu-link">
-                                        <i class="menu-bullet menu-bullet-dot">
-                                            <span></span>
-                                        </i>
-                                        <span class="menu-text">Billings Requests</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
                     </li>
-
+                @endif
+                @if(Auth::user()->guard === 'manager')
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <i class="menu-icon fas fa-user-graduate"></i> <span class="menu-text">Trainees</span>
@@ -273,7 +274,7 @@
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="{{route('billings.index')}}" class="menu-link menu-toggle">
                             <i class="menu-icon
-                                    fas fa-money-bill"></i>
+           fas fa-money-bill"></i>
                             <span class="menu-text">Payment Method</span>
                         </a>
                     </li>
@@ -339,9 +340,14 @@
 
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="{{route('meetings.index')}}" class="menu-link menu-toggle">
-                            <i class="menu-icon
-                                    fas fa-calendar"></i>
+                            <i class="menu-icon fas fa-calendar"></i>
                             <span class="menu-text">Meetings Requests</span>
+                        </a>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="{{route('sendEmailPage')}}" class="menu-link menu-toggle">
+                            <i class="menu-icon fas fa-mail-bulk"></i>
+                            <span class="menu-text">Send Emails</span>
                         </a>
                     </li>
                 @endif
@@ -414,14 +420,14 @@
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="{{route('meetings.index')}}" class="menu-link menu-toggle">
                             <i class="menu-icon
-                                    fas fa-calendar"></i>
+           fas fa-calendar"></i>
                             <span class="menu-text">Meetings Requests</span>
                         </a>
                     </li>
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="{{route('billings.create')}}" class="menu-link menu-toggle">
                             <i class="menu-icon
-                                    fas fa-money-bill"></i>
+           fas fa-money-bill"></i>
                             <span class="menu-text">Payment Method</span>
                         </a>
                     </li>
@@ -435,7 +441,7 @@
                 <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                     <a href="{{route('getChangePassword')}}" class="menu-link menu-toggle">
                         <i class="menu-icon
-                                    fas fa-lock"></i>
+           fas fa-lock"></i>
                         <span class="menu-text">Change Password</span>
                     </a>
                 </li>
@@ -443,7 +449,7 @@
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="{{route('getEditProfile')}}" class="menu-link menu-toggle">
                             <i class="menu-icon
-                                    fas fa-user-edit"></i>
+           fas fa-user-edit"></i>
                             <span class="menu-text">Update Profile</span>
                         </a>
                     </li>
@@ -451,13 +457,13 @@
                 <li class="menu-item" aria-haspopup="true">
                     <a class="menu-link" onclick="document.getElementById('logout').submit()">
                         <i class="menu-icon
-                                    fas fa-sign-out-alt">
+           fas fa-sign-out-alt">
                             <span></span>
                         </i>
                         <span class="menu-text"> <form id="logout" action="{{route('logout')}}" method="Post">
-                                @csrf
-                                Sign Out
-                            </form></span>
+       @csrf
+       Sign Out
+   </form></span>
                     </a>
                 </li>
 
@@ -474,22 +480,23 @@
 <script>
 
     jQuery(document).ready(function () {
-    updateUnreadCount(); // Call the function on page load
-    function updateUnreadCount() {
-        console.log('hikkkk');
-        jQuery.ajax({
-            url: "{{ route('notifications.count') }}",
-            method: "GET",
-            success: function (data) {
-                console.log(data);
-                $('#unreadCount').text(data);
+        updateUnreadCount(); // Call the function on page load
+        function updateUnreadCount() {
+            console.log('hikkkk');
+            jQuery.ajax({
+                url: "{{ route('notifications.count') }}",
+                method: "GET",
+                success: function (data) {
+                    console.log(data);
+                    $('#unreadCount').text(data);
 
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }});
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
 
 </script>
 <!--end::Aside-->

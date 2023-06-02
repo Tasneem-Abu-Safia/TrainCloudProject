@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class CourseTrainee extends Model
 {
@@ -27,5 +28,14 @@ class CourseTrainee extends Model
         return $this->belongsTo(Advisor::class, 'advisor_id');
     }
 
+    public function scopeByLevel($query)
+    {
+        if (auth()->user()->guard == 'advisor') {
+            return $query->where([
+                'advisor_id' => Auth::user()->advisor->id,
+            ]);
+        }
+        return $query;
+    }
 
 }

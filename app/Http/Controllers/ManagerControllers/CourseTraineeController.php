@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ManagerControllers;
 
 use App\Http\Controllers\Controller;
 use App\Mail\AcceeptCourse;
+use App\Models\Billing;
 use App\Models\Course;
 use App\Models\CourseTrainee;
 use App\Models\Trainee;
@@ -53,7 +54,7 @@ class CourseTraineeController extends Controller
     public function indexRequest(Request $request)
     {
         if ($request->ajax()) {
-            $data = CourseTrainee::with(['course', 'trainee' => function ($q) {
+            $data = CourseTrainee::byLevel()->with(['course', 'trainee' => function ($q) {
                 return $q->with('user');
             }])->where('status', 'inactive')->get();
             return DataTables::of($data)
@@ -118,13 +119,15 @@ class CourseTraineeController extends Controller
                 ->update(['status' => 'active']);
 
             $course->increment('num_trainee');
-
+            $billing = Billing::where('trainee_id', $trainee_id)->first();
+            $billing->amount_due -= $course->fees;
+            $billing->save();
             $user = Trainee::with('user')->findOrFail($trainee_id);
             $data = [
                 'course' => $course,
                 'user' => $user,
             ];
-//            Mail::to($user->user->email)->send(new AcceeptCourse($data));
+            Mail::to($user->user->email)->send(new AcceeptCourse($data));
 //            toastr()->success('Trainee has been activated.');
         });
         return response()->json(['message' => 'Trainee has been activated.']);

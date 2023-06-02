@@ -69,6 +69,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('taskSubmissions', TaskSubmissionController::class);
     Route::get('/tasks/{task}/submissions', [TaskController::class, 'getTaskSubmissions'])->name('tasks.submissions');
     Route::get('/attendance/{course}', [CourseController::class, 'showAttendance'])->name('attendance.show');
+    Route::get('/course-trainees/requests', [CourseTraineeController::class, 'indexRequest'])->name('course-traineesRequests');
+    Route::get('/course-trainees/active/{courseId}/{traineeId}', [CourseTraineeController::class, 'active']);
+    Route::get('/course-trainees/inactive/{courseId}/{traineeId}', [CourseTraineeController::class, 'inactive']);
 
     Route::middleware(['manager'])->group(function () {
         // Trainee routes
@@ -89,9 +92,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/advisor-fields', [FieldController::class, 'getAdvisors'])->name('advisorFields');
 
         Route::get('/course-trainees', [CourseTraineeController::class, 'index'])->name('course-trainees');
-        Route::get('/course-trainees/requests', [CourseTraineeController::class, 'indexRequest'])->name('course-traineesRequests');
-        Route::get('/course-trainees/active/{courseId}/{traineeId}', [CourseTraineeController::class, 'active']);
-        Route::get('/course-trainees/inactive/{courseId}/{traineeId}', [CourseTraineeController::class, 'inactive']);
         Route::delete('/course-trainees/destroy/{courseId}/{traineeId}', [CourseTraineeController::class, 'destroy']);
 
         //billing
@@ -121,6 +121,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/submissions/{submission}/mark', [TaskSubmissionController::class, 'updateMark'])->name('submissions.update.mark');
         Route::post('/meetings/send-email', [MeetingController::class, 'sendEmail'])->name('sendEmail');
         Route::post('/meetings/updateStatus', [MeetingController::class, 'updateStatus'])->name('updateMeetingStatus');
+        Route::get('/advisor/sendEmail', [AdvisorController::class, function () {
+            $courses = \App\Models\Course::all();
+            return view('layouts.sendEmail', compact('courses'));
+        }])->name('sendEmailPage');
+        Route::post('advisor/trainee/sendEmail', [AdvisorController::class, 'sendEmail'])->name('sendEmail');
+
     });
     Route::resource('meetings', MeetingController::class);
     Route::resource('billings', BillingController::class);
